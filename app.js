@@ -35,7 +35,13 @@ const homeController = require('./controllers/home');
 const userController = require('./controllers/user');
 const apiController = require('./controllers/api');
 const contactController = require('./controllers/contact');
-const dataController =  require('./controllers/dataprovider');
+
+// Data Providers
+const studentDataProviderController =  require('./controllers/api-guys/dataprovider/student');
+const companyDataProviderController =  require('./controllers/api-guys/dataprovider/company');
+const contestDataProviderController =  require('./controllers/api-guys/dataprovider/contest');
+const projectDataProviderController =  require('./controllers/api-guys/dataprovider/project');
+
 
 /**
  * API keys and Passport configuration.
@@ -223,7 +229,7 @@ app.get('/auth/pinterest/callback', passport.authorize('pinterest', { failureRed
 
 
 // API guys
-app.get('/students', dataController.giveStudents);
+app.get('/students', studentDataProviderController.giveStudents);
 
 /**
  * Error Handler.
