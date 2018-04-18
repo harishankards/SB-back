@@ -42,6 +42,12 @@ const companyDataProviderController =  require('./controllers/api-guys/dataprovi
 const contestDataProviderController =  require('./controllers/api-guys/dataprovider/contest');
 const projectDataProviderController =  require('./controllers/api-guys/dataprovider/project');
 
+// Data receivers
+const studentDataReceiverController =  require('./controllers/api-guys/datareceiver/student');
+const companyDataReceiverController =  require('./controllers/api-guys/datareceiver/company');
+const contestDataReceiverController =  require('./controllers/api-guys/datareceiver/contest');
+const projectDataReceiverController =  require('./controllers/api-guys/datareceiver/project');
+
 
 /**
  * API keys and Passport configuration.
