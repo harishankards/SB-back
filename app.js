@@ -237,6 +237,10 @@ app.get('/auth/pinterest/callback', passport.authorize('pinterest', { failureRed
 // API guys
 app.get('/students', studentDataProviderController.giveStudents);
 
+
+// Signup
+app.post('/student/signup', studentDataProviderController.postSignup);
+
 /**
  * Error Handler.
  */
