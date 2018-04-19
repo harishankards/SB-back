@@ -4,13 +4,11 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const studentSchema = new Schema({
-  _id: Number,
   email: { type: String, unique: true },
   password: String,
   passwordResetToken: String,
   passwordResetExpires: Date,
 
-  username: {type: String, unique: true},
   facebook: String,
   twitter: String,
   google: String,
