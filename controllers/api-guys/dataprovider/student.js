@@ -59,7 +59,7 @@ exports.postSignup = (req, res, next) => {
             return next(err);
           }          
           console.log('saved',saved)
-          res.status(200).send('signup success');
+          res.status(200).send('signup_success');
         });
       });
     });
