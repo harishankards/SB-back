@@ -13,9 +13,9 @@ exports.createProject = (req, res) => {
   }
   else {
     const project = new Project ({
-      title: req.body.title,
-      abstract: req.body.abstract,
-      description: req.body.description
+      title: title,
+      abstract: abstract,
+      description: description
     })
     project.save( (err, saved) => {
       if(err) {
@@ -28,7 +28,4 @@ exports.createProject = (req, res) => {
       }
     })  
   }
-
-  
-
 }

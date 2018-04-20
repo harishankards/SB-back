@@ -244,7 +244,10 @@ app.post('/company/signup', companyDataReceiverController.postSignup);
 
 
 // Projects
-app.post('/projects/new', projectDataReceiverController.createProject)
+app.post('/projects/new', projectDataReceiverController.createProject);
+
+// Contests
+app.post('/contests/new', contestDataReceiverController.createContest);
 
 /**
  * Error Handler.

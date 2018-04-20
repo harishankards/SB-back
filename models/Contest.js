@@ -4,7 +4,6 @@ const Schema = mongoose.Schema;
 const contestSchema = new Schema({
 
 host : { type: Schema.Types.ObjectId, ref: 'Company' },
-id : String,
 title : String,
 description : String,
 date: Date,
