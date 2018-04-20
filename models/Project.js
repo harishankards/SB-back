@@ -4,7 +4,6 @@ const Schema = mongoose.Schema;
 const projectSchema = new Schema({
 
 author : { type: Schema.Types.ObjectId, ref: 'Student' },
-id : String,
 title : String,
 abstract : String,
 description : String,

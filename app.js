@@ -242,6 +242,10 @@ app.get('/students', studentDataProviderController.giveStudents);
 app.post('/student/signup', studentDataReceiverController.postSignup);
 app.post('/company/signup', companyDataReceiverController.postSignup);
 
+
+// Projects
+app.post('/projects/new', projectDataReceiverController.createProject)
+
 /**
  * Error Handler.
  */
