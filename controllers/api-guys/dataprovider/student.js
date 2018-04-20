@@ -9,11 +9,13 @@ const Student = require('../../../models/Student');
 const randomBytesAsync = promisify(crypto.randomBytes);
 
 
-exports.giveStudents = (req, res) => {
-    console.log('got the call from frontend')
-    Student.find({}, (err, students) => {
+exports.getStudent = (req, res) => {
+    console.log('got the call from frontend', req.body)
+    const userEmail = req.param('email')
+    Student.find({email: userEmail}, (err, student) => {
         if(err) {console.log(err);}
-        res.send(students);
+        console.log('found the student and returing', student)
+        res.status(200).send(student);
     })
 }
 

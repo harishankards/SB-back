@@ -234,19 +234,29 @@ app.get('/auth/pinterest/callback', passport.authorize('pinterest', { failureRed
 });
 
 
-// API guys
-app.get('/students', studentDataProviderController.giveStudents);
-
+/* 
+ API guys
+*/
 
 // Signup
 app.post('/student/signup', studentDataReceiverController.postSignup);
 app.post('/company/signup', companyDataReceiverController.postSignup);
 
 
+// Students
+
+app.get('/students/get', studentDataProviderController.getStudent);
+
+// Companies
+
+
+
 // Projects
+
 app.post('/projects/new', projectDataReceiverController.createProject);
 
 // Contests
+
 app.post('/contests/new', contestDataReceiverController.createContest);
 
 /**
