@@ -35,9 +35,4 @@ exports.getStudent = (req, res) => {
     } 
 }
 
-exports.getStudentById = (req, res) => {
-    console.log('got the call from frontend to give student by id', req.query.id)
-    res.status(200).send('student')
-}
-
 

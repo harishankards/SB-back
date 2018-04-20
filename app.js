@@ -246,7 +246,6 @@ app.post('/company/signup', companyDataReceiverController.postSignup);
 // Students
 
 app.get('/students/get', studentDataProviderController.getStudent);
-// app.get('/students/get', studentDataProviderController.getStudentById);
 
 // Companies
 
