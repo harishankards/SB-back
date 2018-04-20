@@ -259,6 +259,7 @@ app.get('/projects/get', projectDataProviderController.getProject);
 // Contests
 
 app.post('/contests/new', contestDataReceiverController.createContest);
+app.get('/contests/get', contestDataProviderController.getContest);
 
 /**
  * Error Handler.
