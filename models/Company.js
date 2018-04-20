@@ -8,8 +8,6 @@ const companySchema = new Schema({
   password: String,
   passwordResetToken: String,
   passwordResetExpires: Date,
-
-  username: {type: String, unique: true},
   facebook: String,
   twitter: String,
   google: String,
@@ -22,7 +20,9 @@ const companySchema = new Schema({
     location: String,
     website: String,
     logo: String
-  }  
+  },
+  contests: [{ type: Schema.Types.ObjectId, ref: 'contests' }]
+    
 
 }, { timestamps: true });
 
