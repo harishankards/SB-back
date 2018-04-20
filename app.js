@@ -249,7 +249,7 @@ app.get('/students/get', studentDataProviderController.getStudent);
 
 // Companies
 
-
+app.get('/companies/get', companyDataProviderController.getCompany);
 
 // Projects
 
