@@ -33,8 +33,16 @@ exports.createProject = (req, res) => {
             res.status(403).send(err)
           }
           else {
-            console.log('project saved', saved)
-            res.status(200).send('project_creation_success')
+            Student.findByIdAndUpdate(saved.author, {$push: {projects: saved._id}}, (studentErr2, student2) =>  {
+              if (studentErr2) {
+                console.log('error in updating the student', studentErr2)
+              }
+              else {
+                console.log('project saved', saved)
+                console.log('student updated', student2)
+                res.status(200).send('project_creation_success')    
+              }
+            })
           }
         }) 
       }
