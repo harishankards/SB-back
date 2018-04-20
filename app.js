@@ -239,7 +239,8 @@ app.get('/students', studentDataProviderController.giveStudents);
 
 
 // Signup
-app.post('/student/signup', studentDataProviderController.postSignup);
+app.post('/student/signup', studentDataReceiverController.postSignup);
+app.post('/company/signup', companyDataReceiverController.postSignup);
 
 /**
  * Error Handler.
