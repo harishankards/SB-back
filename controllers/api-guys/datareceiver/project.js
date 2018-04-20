@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const Project = require('../../../models/Project');
+const Student = require('../../../models/Student');
 
 exports.createProject = (req, res) => {
   console.log('inside project creation project',req.body)
@@ -8,24 +9,35 @@ exports.createProject = (req, res) => {
         abstract = req.body.abstract,
         description = req.body.description,
         author = req.body.author;
-  if (title === '' || abstract === '' || description === ''){
+        
+  if (title === '' || abstract === '' || description === '' || author === ''){
     res.status(403).send('Mandatory field missing')
   }
   else {
-    const project = new Project ({
-      title: title,
-      abstract: abstract,
-      description: description
-    })
-    project.save( (err, saved) => {
-      if(err) {
-        console.log('err in saving the project', err)
-        res.status(403).send(err)
+    Student.findOne({email:author}, (studentErr, student) => {
+      if (studentErr) {
+        console.log('error in finding the student', studentErr)
+        res.status(403).send(studentErr)
       }
       else {
-        console.log('project saved', saved)
-        res.status(200).send('project_creation_success')
+        console.log('found the student', student._id)
+        const project = new Project ({
+          title: title,
+          abstract: abstract,
+          description: description,
+          author: student._id
+        })
+        project.save( (err, saved) => {
+          if(err) {
+            console.log('err in saving the project', err)
+            res.status(403).send(err)
+          }
+          else {
+            console.log('project saved', saved)
+            res.status(200).send('project_creation_success')
+          }
+        }) 
       }
-    })  
+    })
   }
 }
