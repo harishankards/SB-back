@@ -10,7 +10,6 @@ exports.getCompany = (req, res) => {
       console.log(err);
       res.status(413).send(err)      
     }
-
     else {
       console.log('found the company and returning', company)
       res.status(200).send(company);  
