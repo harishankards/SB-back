@@ -254,6 +254,7 @@ app.get('/companies/get', companyDataProviderController.getCompany);
 // Projects
 
 app.post('/projects/new', projectDataReceiverController.createProject);
+app.get('/projects/get', projectDataProviderController.getProject);
 
 // Contests
 
