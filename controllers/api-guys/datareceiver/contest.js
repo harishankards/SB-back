@@ -112,6 +112,4 @@ exports.removeRegistrations = (req, res) => {
       }
     }
   })
-
-
 }

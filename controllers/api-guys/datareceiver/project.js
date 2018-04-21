@@ -49,3 +49,33 @@ exports.createProject = (req, res) => {
     })
   }
 }
+
+exports.addUpvotes = (req, res) => {
+  console.log('inside adding upvotes', req.body)
+  const studentId = req.body.student,
+        projectId = req.body.project;
+  Project.findById(projectId, (err, project) => {
+    if(err) {
+      console.log('could noot find the project', err)
+      res.status(404).send(err)
+    }
+    else {
+      console.log('found the project', project)
+      if (project.upvotes.indexOf(studentId) > -1) {
+        console.log('already upvoted')
+      }
+      else {
+        Project.findByIdAndUpdate(projectId, {$push: {upvotes: studentId}}, (upvoteErr, upvoted) => {
+          if(upvoteErr) {
+            console.log('could not add upvote', upvoteErr)
+            res.status(413).send(upvoteErr)
+          }
+          else {
+            console.log('project upvoted', upvoted)
+            res.status(200).send('upvoted')
+          }
+        })
+      }
+    }
+  })
+}
