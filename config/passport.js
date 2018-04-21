@@ -12,6 +12,8 @@ const { OAuthStrategy } = require('passport-oauth');
 const { OAuth2Strategy } = require('passport-oauth');
 
 const User = require('../models/User');
+const Student = require ('../models/Student');
+const Company = require('../models/Company');
 
 passport.serializeUser((user, done) => {
   done(null, user.id);
@@ -26,16 +28,32 @@ passport.deserializeUser((id, done) => {
 /**
  * Sign in using Email and Password.
  */
+// passport.use(new LocalStrategy({ usernameField: 'email' }, (email, password, done) => {
+//   User.findOne({ email: email.toLowerCase() }, (err, user) => {
+//     if (err) { return done(err); }
+//     if (!user) {
+//       return done(null, false, { msg: `Email ${email} not found.` });
+//     }
+//     user.comparePassword(password, (err, isMatch) => {
+//       if (err) { return done(err); }
+//       if (isMatch) {
+//         return done(null, user);
+//       }
+//       return done(null, false, { msg: 'Invalid email or password.' });
+//     });
+//   });
+// }));
+
 passport.use(new LocalStrategy({ usernameField: 'email' }, (email, password, done) => {
-  User.findOne({ email: email.toLowerCase() }, (err, user) => {
+  Student.findOne({ email: email.toLowerCase() }, (err, student) => {
     if (err) { return done(err); }
-    if (!user) {
+    if (!student) {
       return done(null, false, { msg: `Email ${email} not found.` });
     }
-    user.comparePassword(password, (err, isMatch) => {
+    student.comparePassword(password, (err, isMatch) => {
       if (err) { return done(err); }
       if (isMatch) {
-        return done(null, user);
+        return done(null, student);
       }
       return done(null, false, { msg: 'Invalid email or password.' });
     });

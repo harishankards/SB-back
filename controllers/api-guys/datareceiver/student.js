@@ -1,6 +1,11 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const Student = require('../../../models/Student');
+const { promisify } = require('util');
+const crypto = require('crypto');
+const nodemailer = require('nodemailer');
+const passport = require('passport');
+const randomBytesAsync = promisify(crypto.randomBytes);
 
 
 exports.giveStudents = (req, res) => {
@@ -50,26 +55,49 @@ exports.postSignup = (req, res, next) => {
     });
   };
   
-  exports.deleteStudent = (req, res) => {
-    console.log('inside the delete studen functionality', req.body);
-    const studentId = req.body.student;
-    Student.findById(studentId, (studentErr, studentDetails) =>{
-      if(studentErr || studentDetails === null){
-        console.log('could not find student', studentErr)
-        res.status(413).send('student not found')
-      }
-      else {
-        console.log('student is there')
-        Student.findByIdAndRemove(studentId, (err, deleted) => {
-          if (err) {
-            console.log('could not find student', err)
-            res.status(404).send(err)
-          }
-          else {
-            console.log('deleted student', deleted)
-            res.status(200).send('deleted_student')
-          }
-        })
-      }
-    })
+exports.deleteStudent = (req, res) => {
+  console.log('inside the delete studen functionality', req.body);
+  const studentId = req.body.student;
+  Student.findById(studentId, (studentErr, studentDetails) =>{
+    if(studentErr || studentDetails === null){
+      console.log('could not find student', studentErr)
+      res.status(413).send('student not found')
+    }
+    else {
+      console.log('student is there')
+      Student.findByIdAndRemove(studentId, (err, deleted) => {
+        if (err) {
+          console.log('could not find student', err)
+          res.status(404).send(err)
+        }
+        else {
+          console.log('deleted student', deleted)
+          res.status(200).send('deleted_student')
+        }
+      })
+    }
+  })
+}
+
+exports.login = (req, res, next) => {
+  console.log('inside the login function', req.body);
+  const errors = req.validationErrors();
+
+  if (errors) {
+    console.log('found vallidation errors', errors)
+    res.status(400).send(errors)
   }
+
+  passport.authenticate('local', (err, user, info) => {
+    if (err) { return next(err); }
+    if (!user) {
+      console.log('errors', info)
+      res.status(403).send(info)
+    }
+    req.logIn(user, (err) => {
+      if (err) { return next(err); }
+      console.log('user logged in', user)
+      res.status(200).send('you are logged in')
+    });
+  })(req, res, next); 
+}
