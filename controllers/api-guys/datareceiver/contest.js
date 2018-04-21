@@ -55,14 +55,29 @@ exports.addRegistrations = (req, res) => {
   console.log('inside adding registrations', req.body)
   const contestId = req.body.contest,
         studentId = req.body.student;
-  Contest.findByIdAndUpdate(contestId, {$push: {registrations: studentId}}, (err, contestUpdated) => {
-    if(err) {
-      console.log('could not update contest', err)
-      res.status(403).send(err)
+  Contest.findById(contestId, (contestErr, contestDetails) => {
+    if(contestErr) {
+      console.log('couldnoot find contest', contestErr)
+      res.status(403).send(contestErr)
     }
     else {
-      console.log('updated the contest registration', contestUpdated)
-      res.status(200).send(contestUpdated)
+      console.log('found the contest', contestDetails)
+      if(contestDetails.registrations.indexOf(studentId)> -1) {
+        console.log('student is alreaady registered')
+        res.status(415).send('student alreaady regitered')
+      }
+      else {
+        Contest.findByIdAndUpdate(contestId, {$push: {registrations: studentId}}, (err, contestUpdated) => {
+          if(err) {
+            console.log('could not update contest', err)
+            res.status(403).send(err)
+          }
+          else {
+            console.log('updated the contest registration', contestUpdated)
+            res.status(200).send(contestUpdated)
+          }
+        })
+      }
     }
   })
 }
