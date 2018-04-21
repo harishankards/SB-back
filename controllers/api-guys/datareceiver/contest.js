@@ -50,3 +50,19 @@ exports.createContest = (req, res) => {
 
   }
 }
+
+exports.addRegistrations = (req, res) => {
+  console.log('inside adding registrations', req.body)
+  const contestId = req.body.contest,
+        studentId = req.body.student;
+  Contest.findByIdAndUpdate(contestId, {$push: {registrations: studentId}}, (err, contestUpdated) => {
+    if(err) {
+      console.log('could not update contest', err)
+      res.status(403).send(err)
+    }
+    else {
+      console.log('updated the contest registration', contestUpdated)
+      res.status(200).send(contestUpdated)
+    }
+  })
+}
