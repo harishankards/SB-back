@@ -251,6 +251,7 @@ app.delete('/students/delete', studentDataReceiverController.deleteStudent);
 // Companies
 
 app.get('/companies/get', companyDataProviderController.getCompany);
+app.delete('/companies/delete', companyDataReceiverController.deleteCompany);
 
 // Projects
 
