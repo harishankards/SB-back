@@ -81,3 +81,20 @@ exports.addRegistrations = (req, res) => {
     }
   })
 }
+
+exports.removeRegistrations = (req, res) => {
+  console.log('inside removing registrations', req.body)
+  const contestId = req.body.contest;
+  const studentId = req.body.student;
+  Contest.findOneAndUpdate(contestId, {$pull: {registrations: studentId}}, (err, contest) => {
+    if(err) {
+      console.log('could not find the contest', err)
+      res.status(404).send(err)
+    }
+    else {
+      console.log('removed the student',contest)
+      res.status(200).send('removed')
+    }
+  })
+
+}

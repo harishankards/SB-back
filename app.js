@@ -261,6 +261,7 @@ app.get('/projects/get', projectDataProviderController.getProject);
 app.post('/contests/new', contestDataReceiverController.createContest);
 app.get('/contests/get', contestDataProviderController.getContest);
 app.post('/contests/registrations', contestDataReceiverController.addRegistrations);
+app.post('/contests/registrations/remove', contestDataReceiverController.removeRegistrations);
 
 /**
  * Error Handler.
