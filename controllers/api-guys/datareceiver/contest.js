@@ -95,7 +95,7 @@ exports.removeRegistrations = (req, res) => {
       console.log('found the contest', contestDetails)
       if(contestDetails.registrations.indexOf(studentId) > -1){
         console.log('yes student is there')
-        Contest.findOneAndUpdate(contestId, {$pull: {registrations: studentId}}, (err, contest) => {
+        Contest.findByIdAndUpdate(contestId, {$pull: {registrations: studentId}}, (err, contest) => {
           if(err) {
             console.log('could not find the contest', err)
             res.status(404).send(err)
