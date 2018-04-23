@@ -9,8 +9,9 @@ exports.createContest = (req, res) => {
   const title = req.body.title,
         description = req.body.description,
         date = req.body.date,
+        abstract = req.body.abstract,
         host = req.body.host;
-  if ( title === '' || description === '' || date === '' || host === '') {
+  if ( title === '' || description === '' || date === '' || host === ''|| abstract === '') {
     res.status(403).send('Mandatory field missing')    
   }
   else {
