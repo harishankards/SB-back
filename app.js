@@ -41,12 +41,14 @@ const studentDataProviderController =  require('./controllers/api-guys/dataprovi
 const companyDataProviderController =  require('./controllers/api-guys/dataprovider/company');
 const contestDataProviderController =  require('./controllers/api-guys/dataprovider/contest');
 const projectDataProviderController =  require('./controllers/api-guys/dataprovider/project');
+const awardDataProviderController = require('./controllers/api-guys/dataprovider/award');
 
 // Data receivers
 const studentDataReceiverController =  require('./controllers/api-guys/datareceiver/student');
 const companyDataReceiverController =  require('./controllers/api-guys/datareceiver/company');
 const contestDataReceiverController =  require('./controllers/api-guys/datareceiver/contest');
 const projectDataReceiverController =  require('./controllers/api-guys/datareceiver/project');
+const awardDataReceiverController = require('./controllers/api-guys/datareceiver/award');
 
 
 /**
@@ -269,6 +271,10 @@ app.get('/contests/get', contestDataProviderController.getContest);
 app.post('/contests/registrations', contestDataReceiverController.addRegistrations);
 app.post('/contests/registrations/remove', contestDataReceiverController.removeRegistrations);
 
+
+//Awards
+
+app.get('/awards/get', awardDataProviderController.getAward);
 /**
  * Error Handler.
  */
