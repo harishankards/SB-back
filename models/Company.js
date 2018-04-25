@@ -21,6 +21,7 @@ const companySchema = new Schema({
     website: String,
     logo: String
   },
+  awards: [{ type: Schema.Types.ObjectId, ref: 'awards' }],
   contests: [{ type: Schema.Types.ObjectId, ref: 'contests' }]
     
 
