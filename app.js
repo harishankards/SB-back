@@ -276,6 +276,7 @@ app.post('/contests/registrations/remove', contestDataReceiverController.removeR
 
 app.get('/awards/get', awardDataProviderController.getAward);
 app.post('/awards/new', awardDataReceiverController.createAward);
+app.delete('/awards/delete', awardDataReceiverController.deleteAward);
 /**
  * Error Handler.
  */
