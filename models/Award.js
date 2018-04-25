@@ -7,9 +7,9 @@ provider : { type: Schema.Types.ObjectId, ref: 'Company' },
 title : String,
 description : String,
 date: Date,
-receivers : [{ type: Schema.Types.ObjectId, ref: 'Student' }]
+receiver : { type: Schema.Types.ObjectId, ref: 'Student' }
 })
 
-const Award = mongoose.model('awards', contestSchema);
+const Award = mongoose.model('awards', awardSchema);
 
 module.exports = Award;
