@@ -3,14 +3,6 @@ const mongoose = require('mongoose');
 const Company = require('../../../models/Company');
 
 
-exports.giveCompanies = (req, res) => {
-    console.log('got the call from frontend')
-    Company.find({}, (err, companies) => {
-        if(err) {console.log(err);}
-        res.send(companies);
-    })
-}
-
 exports.postSignup = (req, res, next) => {
     console.log('received the signup request', req.body)
 

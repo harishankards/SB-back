@@ -8,14 +8,6 @@ const passport = require('passport');
 const randomBytesAsync = promisify(crypto.randomBytes);
 
 
-exports.giveStudents = (req, res) => {
-    console.log('got the call from frontend')
-    Student.find({}, (err, students) => {
-        if(err) {console.log(err);}
-        res.send(students);
-    })
-}
-
 exports.postSignup = (req, res, next) => {
     console.log('received the signup request', req.body)
 
@@ -31,7 +23,7 @@ exports.postSignup = (req, res, next) => {
       email: req.body.email,
       password: req.body.password
     });
-  
+    console.log('student data', student)
     Student.findOne({ email: req.body.email }, (err, existingUser) => {
       if (err) { return next(err); }
       if (existingUser) {
@@ -39,6 +31,7 @@ exports.postSignup = (req, res, next) => {
         return res.status(400).send('Account with that email address already exists.');
       }
       student.save((err, saved) => {
+        console.log('saved1',saved)        
         if (err) { 
             console.log('err in saving student', err)
             return next(err); 
@@ -48,7 +41,8 @@ exports.postSignup = (req, res, next) => {
             console.log('errin login', err)
             return next(err);
           }          
-          console.log('saved',saved)
+          console.log('student', student)
+          console.log('saved2',saved)
           res.status(200).send('signup_success');
         });
       });

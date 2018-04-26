@@ -20,6 +20,7 @@ const expressStatusMonitor = require('express-status-monitor');
 const sass = require('node-sass-middleware');
 const multer = require('multer');
 const cors = require('cors');
+const jwt = require('jsonwebtoken');
 
 const upload = multer({ dest: path.join(__dirname, 'uploads') });
 
@@ -242,6 +243,9 @@ app.get('/auth/pinterest/callback', passport.authorize('pinterest', { failureRed
 /* 
  API guys
 */
+
+// Authenticate
+app.post('/authenticate', authenticatorController.authenticate);
 
 // Signup
 app.post('/student/signup', studentDataReceiverController.postSignup);
