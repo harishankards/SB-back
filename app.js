@@ -36,6 +36,9 @@ const userController = require('./controllers/user');
 const apiController = require('./controllers/api');
 const contactController = require('./controllers/contact');
 
+// Authenticators
+const authenticatorController = require('./controllers/api-guys/authenticator');
+
 // Data Providers
 const studentDataProviderController =  require('./controllers/api-guys/dataprovider/student');
 const companyDataProviderController =  require('./controllers/api-guys/dataprovider/company');
