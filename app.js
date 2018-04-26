@@ -263,6 +263,7 @@ app.post('/projects/new', projectDataReceiverController.createProject);
 app.get('/projects/get', projectDataProviderController.getProject);
 app.post('/projects/upvotes', projectDataReceiverController.addUpvotes);
 app.post('/projects/upvotes/remove', projectDataReceiverController.removeUpvotes);
+app.delete('/projects/delete', projectDataReceiverController.deleteProject);
 
 // Contests
 

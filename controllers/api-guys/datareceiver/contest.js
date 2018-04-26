@@ -140,6 +140,16 @@ exports.deleteContest = (req, res) => {
         }
         else {
           console.log('removed contest', contestRemoved)
+          Company.findByIdAndUpdate(contestRemoved.host, {$pull: {contests: contestRemoved._id}}, (updateErr, updatedCompany) => {
+            if(updateErr) {
+              console.log('could not update company', updateErr)
+              res.status(403).send(updateErr)              
+            }
+            else {
+             console.log('updated the company', updatedCompany) 
+             res.status(200).send('removed contest')
+            }
+          })
         }
       })
     }
