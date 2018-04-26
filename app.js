@@ -251,6 +251,7 @@ app.post('/student/login', studentDataReceiverController.login);
 
 app.get('/students/get', studentDataProviderController.getStudent);
 app.delete('/students/delete', studentDataReceiverController.deleteStudent);
+app.get('/students/all', studentDataProviderController.getAllStudents);
 
 // Companies
 
