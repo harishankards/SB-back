@@ -244,15 +244,40 @@ app.get('/auth/pinterest/callback', passport.authorize('pinterest', { failureRed
  API guys
 */
 
+// Login
+app.post('/student/login', studentDataReceiverController.login);
+
 // Authenticate
 app.post('/authenticate', authenticatorController.authenticate);
+
+const apiRoutes = express.Router();
+apiRoutes.use( (req, res, next) => {
+  const token = req.body.token || req.query.token || req.headers['x-access-token'];
+  if (token) {
+    jwt.verify(token, 'superSecret', (err, decoded) => {
+      if (err) {
+        return res.json({success: false, message: 'Failed to authenticate token.'})
+      }
+      else {
+        req.decoded = decoded;
+        next();
+      }
+    });
+  }
+  else {
+    return res.status(403).send({ 
+      success: false, 
+      message: 'No token provided.' 
+    });
+  }
+})
+app.use('/api', apiRoutes);
 
 // Signup
 app.post('/student/signup', studentDataReceiverController.postSignup);
 app.post('/company/signup', companyDataReceiverController.postSignup);
 
-// Login
-app.post('/student/login', studentDataReceiverController.login);
+
 
 // Students
 
