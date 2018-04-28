@@ -5,6 +5,8 @@ const crypto = require('crypto');
 const nodemailer = require('nodemailer');
 const passport = require('passport');
 const Student = require('../../../models/Student');
+const { verifyToken } =  require('../authenticator');
+const jwt = require('jsonwebtoken');
 
 const randomBytesAsync = promisify(crypto.randomBytes);
 
@@ -37,12 +39,22 @@ exports.getStudent = (req, res) => {
 
 exports.getAllStudents = (req, res) => {
   console.log('inside the get all students', req.body)
-  Student.find({}, (err, students) => {
-    if(err) {
-        console.log('err',err)
+  jwt.verify(req.token, 'secret', {expiresIn: '1h'}, (authErr, authData) => {
+    if(authErr) {
+      console.log('autherr', authErr)
+      res.sendStatus(403);
+    } else {
+      Student.find({}, (err, students) => {
+        if(err) {
+            console.log('err',err)
+        }
+        res.json({
+          students,
+          authData
+        });
+      })
     }
-    res.send(students);
-  })
+  });
 }
 
 

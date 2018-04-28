@@ -11,39 +11,31 @@ const jwt = require('jsonwebtoken');
 
 const randomBytesAsync = promisify(crypto.randomBytes);
 
-
 exports.authenticate = (req, res) => {
   console.log('inside the authenticate function', req.body);
-  Student.findOne({email: req.body.email}, (err, student) => {
-    if(err) {
-      console.log('error in finding student', err);
-      res.send(err);
-    }
-
-    if(!student) {
-      console.log('student not found', err);      
-      res.json({success: false, message: 'Authentication failed. student not found'});
-    } 
-    else if (student) {
-      if (student.password != req.body.password) {
-        res.json({ success: false, message: 'Authentication failed. Wrong password.' });
-      }
-      else {
-        const payload = {
-          email: student.email
-        };
-        
-        let token = jwt.sign(payload, 'superSecret', {
-          expiresIn: 1440
-        });
-
-        res.json({
-          success: true,
-          message: 'Have the token!',
-          token: token
-        })
-      } 
-
-    }
+  const user = {
+    email: req.email,
+    password: req.password
+  };
+  jwt.sign({user}, 'secret', (err, token) => {
+    res.json({
+      token
+    })
   })
+}
+
+
+exports.verifyToken = (req, res, next) => {
+  console.log('inside the verify token')
+  const bearerHeader = req.headers['authorization'];
+
+  if(typeof bearerHeader !== undefined) {
+    const bearer = bearerHeader.split(' ');
+    const bearerToken = bearer[1];    
+    req.token = bearerToken;
+    next();
+  } else {
+    res.status(403);
+  }
+
 }
