@@ -280,7 +280,7 @@ app.post('/contests/new', authenticatorController.verifyToken, contestDataReceiv
 app.get('/contests/get', authenticatorController.verifyToken, contestDataProviderController.getContest);
 app.post('/contests/registrations', authenticatorController.verifyToken, contestDataReceiverController.addRegistrations);
 app.post('/contests/registrations/remove', authenticatorController.verifyToken, contestDataReceiverController.removeRegistrations);
-app.delete('/contests/delete', contestDataReceiverController.deleteContest);
+app.delete('/contests/delete', authenticatorController.verifyToken, contestDataReceiverController.deleteContest);
 
 
 //Awards

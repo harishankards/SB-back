@@ -138,37 +138,44 @@ exports.removeRegistrations = (req, res) => {
 
 exports.deleteContest = (req, res) => {
   console.log('inside the delete contest function', req.body);
-  var contestId = req.body.contest;
-  Contest.findById(contestId, (err, contest) => {
-    if (err) {
-      console.log('could not find contest', err)
-      res.status(404).send(err)
-    }
-    else if (contest === null) {
-      console.log('could not find contest', contest)
-      res.status(404).send('could not find contest')
-    }
-    else {
-      console.log('found the contest', contest)
-      Contest.findByIdAndRemove(contest._id, (removeErr, contestRemoved) => {
-        if(removeErr) {
-          console.log('could not remove coontest', removeErr)
-          res.status(403).send(removeErr)
+  jwt.verify(req.token, 'secret', {expiresIn: '10h'}, (authErr, authData) => {
+    if(authErr) {
+      console.log('autherr', authErr)
+      res.sendStatus(403);
+    } else {
+      const contestId = req.body.contest;
+      Contest.findById(contestId, (err, contest) => {
+        if (err) {
+          console.log('could not find contest', err)
+          res.status(404).send(err)
         }
-        else if (contestRemoved === null) {
-          console.log('could not remove coontest', contestRemoved)
-          res.status(403).send('could not remove contest')
+        else if (contest === null) {
+          console.log('could not find contest', contest)
+          res.status(404).send('could not find contest')
         }
         else {
-          console.log('removed contest', contestRemoved)
-          Company.findByIdAndUpdate(contestRemoved.host, {$pull: {contests: contestRemoved._id}}, (updateErr, updatedCompany) => {
-            if(updateErr) {
-              console.log('could not update company', updateErr)
-              res.status(403).send(updateErr)              
+          console.log('found the contest', contest)
+          Contest.findByIdAndRemove(contest._id, (removeErr, contestRemoved) => {
+            if(removeErr) {
+              console.log('could not remove coontest', removeErr)
+              res.status(403).send(removeErr)
+            }
+            else if (contestRemoved === null) {
+              console.log('could not remove coontest', contestRemoved)
+              res.status(403).send('could not remove contest')
             }
             else {
-             console.log('updated the company', updatedCompany) 
-             res.status(200).send('removed contest')
+              console.log('removed contest', contestRemoved)
+              Company.findByIdAndUpdate(contestRemoved.host, {$pull: {contests: contestRemoved._id}}, (updateErr, updatedCompany) => {
+                if(updateErr) {
+                  console.log('could not update company', updateErr)
+                  res.status(403).send(updateErr)              
+                }
+                else {
+                 console.log('updated the company', updatedCompany) 
+                 res.status(200).send('removed contest')
+                }
+              })
             }
           })
         }
