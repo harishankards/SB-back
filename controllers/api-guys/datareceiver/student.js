@@ -6,6 +6,7 @@ const crypto = require('crypto');
 const nodemailer = require('nodemailer');
 const passport = require('passport');
 const randomBytesAsync = promisify(crypto.randomBytes);
+const jwt = require('jsonwebtoken');
 
 
 exports.postSignup = (req, res, next) => {
@@ -51,22 +52,29 @@ exports.postSignup = (req, res, next) => {
   
 exports.deleteStudent = (req, res) => {
   console.log('inside the delete studen functionality', req.body);
-  const studentId = req.body.student;
-  Student.findById(studentId, (studentErr, studentDetails) =>{
-    if(studentErr || studentDetails === null){
-      console.log('could not find student', studentErr)
-      res.status(413).send('student not found')
-    }
-    else {
-      console.log('student is there')
-      Student.findByIdAndRemove(studentId, (err, deleted) => {
-        if (err) {
-          console.log('could not find student', err)
-          res.status(404).send(err)
+  jwt.verify(req.token, 'secret', {expiresIn: '10h'}, (authErr, authData) => {
+    if(authErr) {
+      console.log('autherr', authErr)
+      res.sendStatus(403);
+    } else {
+      const studentId = req.body.student;
+      Student.findById(studentId, (studentErr, studentDetails) =>{
+        if(studentErr || studentDetails === null){
+          console.log('could not find student', studentErr)
+          res.status(413).send('student not found')
         }
         else {
-          console.log('deleted student', deleted)
-          res.status(200).send('deleted_student')
+          console.log('student is there')
+          Student.findByIdAndRemove(studentId, (err, deleted) => {
+            if (err) {
+              console.log('could not find student', err)
+              res.status(404).send(err)
+            }
+            else {
+              console.log('deleted student', deleted)
+              res.status(200).send('deleted_student')
+            }
+          })
         }
       })
     }
