@@ -76,6 +76,7 @@ exports.addUpvotes = (req, res) => {
           console.log('found the project', project)
           if (project.upvotes.indexOf(studentId) > -1) {
             console.log('already upvoted')
+            res.status(404).send('already upvoted')            
           }
           else {
             Project.findByIdAndUpdate(projectId, {$push: {upvotes: studentId}}, (upvoteErr, upvoted) => {
