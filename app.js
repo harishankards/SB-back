@@ -268,7 +268,7 @@ app.delete('/companies/delete', companyDataReceiverController.deleteCompany);
 
 // Projects
 
-app.post('/projects/new', projectDataReceiverController.createProject);
+app.post('/projects/new', authenticatorController.verifyToken, projectDataReceiverController.createProject);
 app.get('/projects/get', authenticatorController.verifyToken, projectDataProviderController.getProject);
 app.post('/projects/upvotes', projectDataReceiverController.addUpvotes);
 app.post('/projects/upvotes/remove', projectDataReceiverController.removeUpvotes);
