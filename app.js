@@ -276,7 +276,7 @@ app.delete('/projects/delete', projectDataReceiverController.deleteProject);
 
 // Contests
 
-app.post('/contests/new', contestDataReceiverController.createContest);
+app.post('/contests/new', authenticatorController.verifyToken, contestDataReceiverController.createContest);
 app.get('/contests/get', authenticatorController.verifyToken, contestDataProviderController.getContest);
 app.post('/contests/registrations', contestDataReceiverController.addRegistrations);
 app.post('/contests/registrations/remove', contestDataReceiverController.removeRegistrations);
