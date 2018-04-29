@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const Company = require('../../../models/Company');
+const jwt = require('jsonwebtoken');
 
 
 exports.postSignup = (req, res, next) => {
@@ -44,22 +45,29 @@ exports.postSignup = (req, res, next) => {
   
   exports.deleteCompany = (req, res) => {
     console.log('inside the delete company functionality', req.body);
-    const companyId = req.body.company;
-    Company.findById(companyId, (companyErr, companyDetails) =>{
-      if(companyErr || companyDetails === null){
-        console.log('could not find company', companyErr)
-        res.status(413).send('company not found')
-      }
-      else {
-        console.log('company is there')
-        Company.findByIdAndRemove(companyId, (err, deleted) => {
-          if (err) {
-            console.log('could not find company', err)
-            res.status(404).send(err)
+    jwt.verify(req.token, 'secret', {expiresIn: '10h'}, (authErr, authData) => {
+      if(authErr) {
+        console.log('autherr', authErr)
+        res.sendStatus(403);
+      } else {
+        const companyId = req.body.company;
+        Company.findById(companyId, (companyErr, companyDetails) =>{
+          if(companyErr || companyDetails === null){
+            console.log('could not find company', companyErr)
+            res.status(413).send('company not found')
           }
           else {
-            console.log('deleted company', deleted)
-            res.status(200).send('deleted_company')
+            console.log('company is there')
+            Company.findByIdAndRemove(companyId, (err, deleted) => {
+              if (err) {
+                console.log('could not find company', err)
+                res.status(404).send(err)
+              }
+              else {
+                console.log('deleted company', deleted)
+                res.status(200).send('deleted_company')
+              }
+            })
           }
         })
       }
