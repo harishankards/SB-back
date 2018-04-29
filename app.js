@@ -255,11 +255,9 @@ app.post('/authenticate', authenticatorController.authenticate);
 app.post('/student/signup', studentDataReceiverController.postSignup);
 app.post('/company/signup', companyDataReceiverController.postSignup);
 
-
-
 // Students
 
-app.get('/students/get', studentDataProviderController.getStudent);
+app.get('/students/get', authenticatorController.verifyToken, studentDataProviderController.getStudent);
 app.delete('/students/delete', studentDataReceiverController.deleteStudent);
 app.get('/students/all', authenticatorController.verifyToken,  studentDataProviderController.getAllStudents);
 

@@ -14,14 +14,14 @@ const randomBytesAsync = promisify(crypto.randomBytes);
 exports.authenticate = (req, res) => {
   console.log('inside the authenticate function', req.body);
   const user = {
-    email: req.email,
-    password: req.password
+    email: req.body.email,
+    password: req.body.password
   };
   jwt.sign({user}, 'secret', (err, token) => {
     res.json({
       token
     })
-  })
+  });
 }
 
 
