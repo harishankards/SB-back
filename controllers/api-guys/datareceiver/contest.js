@@ -99,32 +99,39 @@ exports.addRegistrations = (req, res) => {
 
 exports.removeRegistrations = (req, res) => {
   console.log('inside removing registrations', req.body)
-  const contestId = req.body.contest;
-  const studentId = req.body.student;
-  Contest.findById(contestId, (contestErr, contestDetails) => {
-    if (contestErr) {
-      console.log('could not find contest', contestErr)
-      res.status(404).send(contestErr)
-    }
-    else {
-      console.log('found the contest', contestDetails)
-      if(contestDetails.registrations.indexOf(studentId) > -1){
-        console.log('yes student is there')
-        Contest.findByIdAndUpdate(contestId, {$pull: {registrations: studentId}}, (err, contest) => {
-          if(err) {
-            console.log('could not find the contest', err)
-            res.status(404).send(err)
+  jwt.verify(req.token, 'secret', {expiresIn: '10h'}, (authErr, authData) => {
+    if(authErr) {
+      console.log('autherr', authErr)
+      res.sendStatus(403);
+    } else {
+      const contestId = req.body.contest;
+      const studentId = req.body.student;
+      Contest.findById(contestId, (contestErr, contestDetails) => {
+        if (contestErr) {
+          console.log('could not find contest', contestErr)
+          res.status(404).send(contestErr)
+        }
+        else {
+          console.log('found the contest', contestDetails)
+          if(contestDetails.registrations.indexOf(studentId) > -1){
+            console.log('yes student is there')
+            Contest.findByIdAndUpdate(contestId, {$pull: {registrations: studentId}}, (err, contest) => {
+              if(err) {
+                console.log('could not find the contest', err)
+                res.status(404).send(err)
+              }
+              else {
+                console.log('removed the student',contest)
+                res.status(200).send('removed')
+              }
+            })
           }
           else {
-            console.log('removed the student',contest)
-            res.status(200).send('removed')
+            console.log('student not found')
+            res.status(403).send('student not found')
           }
-        })
-      }
-      else {
-        console.log('student not found')
-        res.status(403).send('student not found')
-      }
+        }
+      })
     }
   })
 }

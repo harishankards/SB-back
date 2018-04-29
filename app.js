@@ -279,7 +279,7 @@ app.delete('/projects/delete', projectDataReceiverController.deleteProject);
 app.post('/contests/new', authenticatorController.verifyToken, contestDataReceiverController.createContest);
 app.get('/contests/get', authenticatorController.verifyToken, contestDataProviderController.getContest);
 app.post('/contests/registrations', authenticatorController.verifyToken, contestDataReceiverController.addRegistrations);
-app.post('/contests/registrations/remove', contestDataReceiverController.removeRegistrations);
+app.post('/contests/registrations/remove', authenticatorController.verifyToken, contestDataReceiverController.removeRegistrations);
 app.delete('/contests/delete', contestDataReceiverController.deleteContest);
 
 
