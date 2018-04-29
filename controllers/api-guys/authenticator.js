@@ -36,6 +36,7 @@ exports.verifyToken = (req, res, next) => {
     const bearer = bearerHeader.split(' ');
     const bearerToken = bearer[1];    
     req.token = bearerToken;
+    console.log('verify success')
     next();
   } 
 }
