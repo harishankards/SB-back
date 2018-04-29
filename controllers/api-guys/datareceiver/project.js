@@ -98,32 +98,39 @@ exports.addUpvotes = (req, res) => {
 
 exports.removeUpvotes = (req, res) => {
   console.log('inside the remove upvotes function', req.body)
-  const studentId = req.body.student,
-        projectId = req.body.project;
-  Project.findById(projectId, (err, project) => {
-    if(err) {
-      console.log('could not find the project', err)
-      res.status(404).send(err)
-    }
-    else {
-      console.log('found the project', project)
-      if(project.upvotes.indexOf(studentId) > -1){
-        console.log('yes student is there')
-        Project.findByIdAndUpdate(projectId, {$pull: {upvotes: studentId}}, (removeErr, removed) => {
-          if(removeErr) {
-            console.log('could not remove upvote', removeErr)
-            res.status(413).send(removeErr)
+  jwt.verify(req.token, 'secret', {expiresIn: '10h'}, (authErr, authData) => {
+    if(authErr) {
+      console.log('autherr', authErr)
+      res.sendStatus(403);
+    } else {
+        const studentId = req.body.student,
+              projectId = req.body.project;
+        Project.findById(projectId, (err, project) => {
+          if(err) {
+            console.log('could not find the project', err)
+            res.status(404).send(err)
           }
-          else{
-            console.log('removed the upvote', removed)
-            res.status(200).send('removed upvote')            
+          else {
+            console.log('found the project', project)
+            if(project.upvotes.indexOf(studentId) > -1){
+              console.log('yes student is there')
+              Project.findByIdAndUpdate(projectId, {$pull: {upvotes: studentId}}, (removeErr, removed) => {
+                if(removeErr) {
+                  console.log('could not remove upvote', removeErr)
+                  res.status(413).send(removeErr)
+                }
+                else{
+                  console.log('removed the upvote', removed)
+                  res.status(200).send('removed upvote')            
+                }
+              })
+            }
+            else {
+              console.log('student not upvoted')
+              res.status(404).send('student not upvoted')
+            }
           }
         })
-      }
-      else {
-        console.log('upvote not found')
-        res.status(404).send('upvote not found')
-      }
     }
   })
 }
