@@ -287,7 +287,7 @@ app.delete('/contests/delete', contestDataReceiverController.deleteContest);
 
 app.get('/awards/get', authenticatorController.verifyToken, awardDataProviderController.getAward);
 app.post('/awards/new', authenticatorController.verifyToken, awardDataReceiverController.createAward);
-app.delete('/awards/delete', awardDataReceiverController.deleteAward);
+app.delete('/awards/delete', authenticatorController.verifyToken, awardDataReceiverController.deleteAward);
 /**
  * Error Handler.
  */

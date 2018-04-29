@@ -82,44 +82,51 @@ exports.createAward = (req, res) => {
 
 exports.deleteAward = (req, res) => {
   console.log('inside the delete award function', req.body);
-  const awardId = req.body.award;
-  Award.findById(awardId, (err, award) => {
-    if(err){
-      console.log('err in find the award', err)
-      res.status(404).send(err)
-    }
-    else if (award === null) {
-      console.log('err in find the award', err)
-      res.status(412).send(err)
-    }
-    else {
-      console.log('found the award', award)
-      Award.findByIdAndRemove(awardId, (awardErr, removedAward) => {
-        if (awardErr) {
-          console.log('could not remove award', err)
-          res.status(413).send(err)
+  jwt.verify(req.token, 'secret', {expiresIn: '10h'}, (authErr, authData) => {
+    if(authErr) {
+      console.log('autherr', authErr)
+      res.sendStatus(403);
+    } else {
+      const awardId = req.body.award;
+      Award.findById(awardId, (err, award) => {
+        if(err){
+          console.log('err in find the award', err)
+          res.status(404).send(err)
         }
-
+        else if (award === null) {
+          console.log('err in find the award', err)
+          res.status(412).send(err)
+        }
         else {
-          console.log('deleted award', removedAward)
-          const removedAwardId = removedAward._id;
-          const companyId = removedAward.provider;
-          const studentId = removedAward.receiver; 
-          Company.findByIdAndUpdate(companyId, {$pull: {awards: removedAwardId}}, (removeFromCompanyErr, removedFromCompany) => {
-            if(removeFromCompanyErr) {
-              console.log('unable to remove from company', removeFromCompanyErr)
-              res.status(413).send(removeFromCompanyErr)      
+          console.log('found the award', award)
+          Award.findByIdAndRemove(awardId, (awardErr, removedAward) => {
+            if (awardErr) {
+              console.log('could not remove award', err)
+              res.status(413).send(err)
             }
+    
             else {
-              console.log('removed from company', removedFromCompany)
-              Student.findByIdAndUpdate(studentId, {$pull: {awards: removedAwardId}}, (removeFromStudentErr, removedFromStudent) => {
-                if(removeFromStudentErr) {
-                  console.log('unable to remove from student', removeFromStudentErr)
-                  res.status(413).send(removeFromStudentErr)      
+              console.log('deleted award', removedAward)
+              const removedAwardId = removedAward._id;
+              const companyId = removedAward.provider;
+              const studentId = removedAward.receiver; 
+              Company.findByIdAndUpdate(companyId, {$pull: {awards: removedAwardId}}, (removeFromCompanyErr, removedFromCompany) => {
+                if(removeFromCompanyErr) {
+                  console.log('unable to remove from company', removeFromCompanyErr)
+                  res.status(413).send(removeFromCompanyErr)      
                 }
                 else {
-                  console.log('removed from student', removedFromStudent)
-                  res.status(200).send('award_deleted')
+                  console.log('removed from company', removedFromCompany)
+                  Student.findByIdAndUpdate(studentId, {$pull: {awards: removedAwardId}}, (removeFromStudentErr, removedFromStudent) => {
+                    if(removeFromStudentErr) {
+                      console.log('unable to remove from student', removeFromStudentErr)
+                      res.status(413).send(removeFromStudentErr)      
+                    }
+                    else {
+                      console.log('removed from student', removedFromStudent)
+                      res.status(200).send('award_deleted')
+                    }
+                  })
                 }
               })
             }
