@@ -263,7 +263,7 @@ app.get('/students/all', authenticatorController.verifyToken,  studentDataProvid
 
 // Companies
 
-app.get('/companies/get', companyDataProviderController.getCompany);
+app.get('/companies/get', authenticatorController.verifyToken, companyDataProviderController.getCompany);
 app.delete('/companies/delete', companyDataReceiverController.deleteCompany);
 
 // Projects
