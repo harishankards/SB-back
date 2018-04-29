@@ -2,18 +2,26 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const Contest = require('../../../models/Contest');
+const jwt = require('jsonwebtoken');
 
 exports.getContest = (req, res) => {
-    console.log('inside the get contest', req.query)
-    const contestId = req.query.id;
-    Contest.findById(contestId, (err, contest) => {
-      if (err) {
-        console.log('could not find contest', err)
-        res.status(403).send(err)
-      }
-      else {
-        console.log('found the contest', contest)
-        res.status(200).send(contest)
-      }
-    })
+  console.log('inside the get contest', req.query)
+  jwt.verify(req.token, 'secret', {expiresIn: '10h'}, (authErr, authData) => {
+    if(authErr) {
+      console.log('autherr', authErr)
+      res.sendStatus(403);
+    } else {
+      const contestId = req.query.id;
+      Contest.findById(contestId, (err, contest) => {
+        if (err) {
+          console.log('could not find contest', err)
+          res.status(403).send(err)
+        }
+        else {
+          console.log('found the contest', contest)
+          res.status(200).send(contest)
+        }
+      })
+    }
+  })
   }
