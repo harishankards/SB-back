@@ -29,13 +29,13 @@ exports.verifyToken = (req, res, next) => {
   console.log('inside the verify token')
   const bearerHeader = req.headers['authorization'];
 
-  if(typeof bearerHeader !== undefined) {
+  if (!bearerHeader) {
+    res.sendStatus(403);
+  }
+  else {
     const bearer = bearerHeader.split(' ');
     const bearerToken = bearer[1];    
     req.token = bearerToken;
     next();
-  } else {
-    res.status(403);
-  }
-
+  } 
 }
