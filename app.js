@@ -272,7 +272,7 @@ app.post('/projects/new', authenticatorController.verifyToken, projectDataReceiv
 app.get('/projects/get', authenticatorController.verifyToken, projectDataProviderController.getProject);
 app.post('/projects/upvotes', authenticatorController.verifyToken, projectDataReceiverController.addUpvotes);
 app.post('/projects/upvotes/remove', authenticatorController.verifyToken, projectDataReceiverController.removeUpvotes);
-app.delete('/projects/delete', projectDataReceiverController.deleteProject);
+app.delete('/projects/delete', authenticatorController.verifyToken, projectDataReceiverController.deleteProject);
 
 // Contests
 
