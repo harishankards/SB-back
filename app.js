@@ -269,7 +269,7 @@ app.delete('/companies/delete', companyDataReceiverController.deleteCompany);
 // Projects
 
 app.post('/projects/new', projectDataReceiverController.createProject);
-app.get('/projects/get', projectDataProviderController.getProject);
+app.get('/projects/get', authenticatorController.verifyToken, projectDataProviderController.getProject);
 app.post('/projects/upvotes', projectDataReceiverController.addUpvotes);
 app.post('/projects/upvotes/remove', projectDataReceiverController.removeUpvotes);
 app.delete('/projects/delete', projectDataReceiverController.deleteProject);
