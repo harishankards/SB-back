@@ -45,6 +45,12 @@ exports.postSignup = (req, res, next) => {
           console.log('student', student)
           console.log('saved2',saved)
           jwt.sign({student}, 'secret', (err, token) => {
+            if (err) {
+              console.log('err in creating token')
+              res.json({
+                message: 'err in creating token'
+              })
+            }
             console.log('inside signing jwt')
             res.json({
               token: token,
@@ -96,16 +102,28 @@ exports.login = (req, res, next) => {
     res.status(400).send(errors)
   }
 
-  passport.authenticate('local', (err, user, info) => {
+  passport.authenticate('local', (err, student, info) => {
     if (err) { return next(err); }
-    if (!user) {
+    if (!student) {
       console.log('errors', info)
       res.status(403).send(info)
     }
-    req.logIn(user, (err) => {
+    req.logIn(student, (err) => {
       if (err) { return next(err); }
-      console.log('user logged in', user)
-      res.status(200).send('you are logged in')
+      jwt.sign({student}, 'secret', (err, token) => {
+        if (err) {
+          console.log('err in creating token')
+          res.json({
+            message: 'err in creating token'
+          })
+        }
+        console.log('inside signing jwt')
+        console.log('user logged in', student)        
+        res.json({
+          token: token,
+          message: 'login_success'
+        })
+      });
     });
   })(req, res, next); 
 }

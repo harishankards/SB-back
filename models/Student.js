@@ -32,18 +32,18 @@ const studentSchema = new Schema({
 /**
  * Password hash middleware.
 //  */
-// studentSchema.pre('save', function save(next) {
-//   const student = this;
-//   if (!student.isModified('password')) { return next(); }
-//   bcrypt.genSalt(10, (err, salt) => {
-//     if (err) { return next(err); }
-//     bcrypt.hash(student.password, salt, null, (err, hash) => {
-//       if (err) { return next(err); }
-//       student.password = hash;
-//       next();
-//     });
-//   });
-// });
+studentSchema.pre('save', function save(next) {
+  const student = this;
+  if (!student.isModified('password')) { return next(); }
+  bcrypt.genSalt(10, (err, salt) => {
+    if (err) { return next(err); }
+    bcrypt.hash(student.password, salt, null, (err, hash) => {
+      if (err) { return next(err); }
+      student.password = hash;
+      next();
+    });
+  });
+});
 
 /**
  * Helper method for validating student's password.
