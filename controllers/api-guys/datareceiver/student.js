@@ -44,7 +44,13 @@ exports.postSignup = (req, res, next) => {
           }          
           console.log('student', student)
           console.log('saved2',saved)
-          res.status(200).send('signup_success');
+          jwt.sign({student}, 'secret', (err, token) => {
+            console.log('inside signing jwt')
+            res.json({
+              token: token,
+              message: 'signup_success'
+            })
+          });
         });
       });
     });
