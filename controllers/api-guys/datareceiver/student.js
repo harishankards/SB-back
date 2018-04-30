@@ -102,7 +102,7 @@ exports.login = (req, res, next) => {
     res.status(400).send(errors)
   }
 
-  passport.authenticate('local', (err, student, info) => {
+  passport.authenticate('student-local', (err, student, info) => {
     if (err) { return next(err); }
     if (!student) {
       console.log('errors', info)
