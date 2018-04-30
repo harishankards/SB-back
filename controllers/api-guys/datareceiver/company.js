@@ -35,9 +35,21 @@ exports.postSignup = (req, res, next) => {
           if (err) {
             console.log('errin login', err)
             return next(err);
-          }          
-          console.log('saved',saved)
-          res.status(200).send('signup_success');
+          }         
+          console.log('saved',saved)           
+          jwt.sign({company}, 'secret', (err, token) => {
+            if (err) {
+              console.log('err in creating token')
+              res.json({
+                message: 'err in creating token'
+              })
+            }
+            console.log('inside signing jwt')
+            res.json({
+              token: token,
+              message: 'signup_success'
+            })
+          });
         });
       });
     });
