@@ -246,6 +246,7 @@ app.get('/auth/pinterest/callback', passport.authorize('pinterest', { failureRed
 
 // Login
 app.post('/student/login', studentDataReceiverController.login);
+app.post('/company/login', companyDataReceiverController.login);
 
 // Authenticate
 app.post('/authenticate', authenticatorController.authenticate);

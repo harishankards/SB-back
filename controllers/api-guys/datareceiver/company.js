@@ -2,7 +2,12 @@ const express = require('express');
 const mongoose = require('mongoose');
 const Company = require('../../../models/Company');
 const jwt = require('jsonwebtoken');
-
+const Student = require('../../../models/Student');
+const { promisify } = require('util');
+const crypto = require('crypto');
+const nodemailer = require('nodemailer');
+const passport = require('passport');
+const randomBytesAsync = promisify(crypto.randomBytes);
 
 exports.postSignup = (req, res, next) => {
     console.log('received the signup request', req.body)
@@ -84,4 +89,39 @@ exports.postSignup = (req, res, next) => {
         })
       }
     })
+  }
+
+  exports.login = (req, res, next) => {
+    console.log('inside the company login function', req.body);
+    const errors = req.validationErrors();
+  
+    if (errors) {
+      console.log('found vallidation errors', errors)
+      res.status(400).send(errors)
+    }
+  
+    passport.authenticate('company-local', (err, company, info) => {
+      if (err) { return next(err); }
+      if (!company) {
+        console.log('errors', info)
+        res.status(403).send(info)
+      }
+      req.logIn(company, (err) => {
+        if (err) { return next(err); }
+        jwt.sign({company}, 'secret', (err, token) => {
+          if (err) {
+            console.log('err in creating token')
+            res.json({
+              message: 'err in creating token'
+            })
+          }
+          console.log('inside signing jwt')
+          console.log('user logged in', company)        
+          res.json({
+            token: token,
+            message: 'login_success'
+          })
+        });
+      });
+    })(req, res, next); 
   }
