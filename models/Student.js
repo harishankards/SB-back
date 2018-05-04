@@ -8,6 +8,7 @@ const studentSchema = new Schema({
   password: String,
   passwordResetToken: String,
   passwordResetExpires: Date,
+  username: String,
 
   facebook: String,
   twitter: String,
