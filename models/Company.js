@@ -22,7 +22,8 @@ const companySchema = new Schema({
     logo: String
   },
   awards: [{ type: Schema.Types.ObjectId, ref: 'awards' }],
-  contests: [{ type: Schema.Types.ObjectId, ref: 'contests' }]
+  contests: [{ type: Schema.Types.ObjectId, ref: 'contests' }],
+  tags: Array
     
 
 }, { timestamps: true });

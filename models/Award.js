@@ -7,7 +7,8 @@ provider : { type: Schema.Types.ObjectId, ref: 'Company' },
 title : String,
 description : String,
 date: Date,
-receiver : { type: Schema.Types.ObjectId, ref: 'Student' }
+receiver : { type: Schema.Types.ObjectId, ref: 'Student' },
+tags: Array
 })
 
 const Award = mongoose.model('awards', awardSchema);

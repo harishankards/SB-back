@@ -7,7 +7,8 @@ author : { type: Schema.Types.ObjectId, ref: 'Student' },
 title : String,
 abstract : String,
 description : String,
-upvotes : [{ type: Schema.Types.ObjectId, ref: 'Student' }]
+upvotes : [{ type: Schema.Types.ObjectId, ref: 'Student' }],
+tags: Array
 })
 
 

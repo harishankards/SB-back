@@ -8,7 +8,8 @@ title : String,
 description : String,
 abstract: String,
 date: Date,
-registrations : [{ type: Schema.Types.ObjectId, ref: 'Student' }]
+registrations : [{ type: Schema.Types.ObjectId, ref: 'Student' }],
+tags: Array
 })
 
 const Contest = mongoose.model('contests', contestSchema);
