@@ -5,9 +5,9 @@ const contestSchema = new Schema({
 
 host : { type: Schema.Types.ObjectId, ref: 'Company' },
 title : String,
-description : String,
-abstract: String,
-date: Date,
+about : String,
+rulesFormat: String,
+date: Object,
 registrations : [{ type: Schema.Types.ObjectId, ref: 'Student' }],
 tags: Array
 })

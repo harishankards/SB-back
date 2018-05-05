@@ -13,11 +13,12 @@ exports.createContest = (req, res) => {
       res.sendStatus(403);
     } else {
         const title = req.body.title,
-        description = req.body.description,
-        date = req.body.date,
-        abstract = req.body.abstract,
-        host = req.body.host;
-        if ( title === '' || description === '' || date === '' || host === ''|| abstract === '') {
+              about = req.body.about,
+              date = req.body.date,
+              rulesFormat = req.body.rulesFormat,
+              host = req.body.host,
+              tags = req.body.tags;
+        if ( title === '' || about === '' || date === '' || host === ''|| rulesFormat === '' || tags === '') {
           res.status(403).send('Mandatory field missing')    
         }
         else {
@@ -30,8 +31,10 @@ exports.createContest = (req, res) => {
               console.log('found the company', company)
               const contest = new Contest({
                 title: title,
-                description: description,
+                about: about,
                 date: date,
+                rulesFormat: rulesFormat,
+                tags: tags,
                 host: company._id
               })
               contest.save( (err, saved) => {
