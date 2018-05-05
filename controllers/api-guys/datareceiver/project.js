@@ -12,18 +12,20 @@ exports.createProject = (req, res) => {
       res.sendStatus(403);
     } else {
       const title = req.body.title,
-      abstract = req.body.abstract,
-      description = req.body.description,
-      author = req.body.author;
+            abstract = req.body.abstract,
+            description = req.body.description,
+            author = req.body.author,
+            files = req.body.files,
+            tags = req.body.tags;
       
-      if (title === '' || abstract === '' || description === '' || author === ''){
-        res.status(403).send('Mandatory field missing')
+      if (title === '' || abstract === '' || description === '' || author === '' || files === '' || tags === ''){
+        res.status(406).send('Mandatory field missing')
       }
       else {
         Student.findOne({email:author}, (studentErr, student) => {
           if (studentErr) {
             console.log('error in finding the student', studentErr)
-            res.status(403).send(studentErr)
+            res.status(404).send(studentErr)
           }
           else {
             console.log('found the student', student._id)
@@ -31,12 +33,14 @@ exports.createProject = (req, res) => {
               title: title,
               abstract: abstract,
               description: description,
-              author: student._id
+              author: student._id,
+              tags: tags,
+              files: files
             })
             project.save( (err, saved) => {
               if(err) {
                 console.log('err in saving the project', err)
-                res.status(403).send(err)
+                res.status(401).send(err)
               }
               else {
                 console.log('project saved', saved)            
