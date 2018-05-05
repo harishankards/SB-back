@@ -8,7 +8,8 @@ title : String,
 abstract : String,
 description : String,
 upvotes : [{ type: Schema.Types.ObjectId, ref: 'Student' }],
-tags: Array
+tags: Array,
+files: Array
 })
 
 
