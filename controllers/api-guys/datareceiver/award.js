@@ -11,14 +11,16 @@ exports.createAward = (req, res) => {
   jwt.verify(req.token, 'secret', {expiresIn: '10h'}, (authErr, authData) => {
     if(authErr) {
       console.log('autherr', authErr)
-      res.sendStatus(403);
+      res.sendStatus(406);
     } else {
       const title = req.body.title,
       description = req.body.description,
       company = req.body.company,
-      student = req.body.student;
+      student = req.body.student,
+      files = req.body.files,
+      tags = req.body.tags;
       
-      if (title === '' ||  description === '' || company === '' || student === ''){
+      if (title === '' ||  description === '' || company === '' || student === '' || files === '' || tags === ''){
         res.status(403).send('Mandatory field missing')
       }
       else {
@@ -40,7 +42,9 @@ exports.createAward = (req, res) => {
                   title: title,
                   description: description,
                   provider: company._id,
-                  receiver: student._id
+                  receiver: student._id,
+                  files: files,
+                  tags: tags
                 })
                 award.save( (err, saved) => {
                   if(err) {

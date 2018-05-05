@@ -8,6 +8,7 @@ title : String,
 description : String,
 date: Date,
 receiver : { type: Schema.Types.ObjectId, ref: 'Student' },
+files: Array,
 tags: Array
 })
 
