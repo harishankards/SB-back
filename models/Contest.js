@@ -10,7 +10,7 @@ rulesFormat: String,
 date: Object,
 registrations : [{ type: Schema.Types.ObjectId, ref: 'Student' }],
 tags: Array
-})
+}, { timestamps: true })
 
 const Contest = mongoose.model('contests', contestSchema);
 
