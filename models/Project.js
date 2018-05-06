@@ -10,8 +10,7 @@ description : String,
 upvotes : [{ type: Schema.Types.ObjectId, ref: 'Student' }],
 tags: Array,
 files: Array,
-created_at: { type: Date, required: true, default: Date.now }
-})
+},{ timestamps: true })
 
 
 const Project = mongoose.model('projects', projectSchema);

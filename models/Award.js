@@ -10,7 +10,7 @@ date: Date,
 receiver : { type: Schema.Types.ObjectId, ref: 'Student' },
 files: Array,
 tags: Array
-})
+},{ timestamps: true })
 
 const Award = mongoose.model('awards', awardSchema);
 
