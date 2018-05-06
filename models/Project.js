@@ -9,7 +9,8 @@ abstract : String,
 description : String,
 upvotes : [{ type: Schema.Types.ObjectId, ref: 'Student' }],
 tags: Array,
-files: Array
+files: Array,
+created_at: { type: Date, required: true, default: Date.now }
 })
 
 
