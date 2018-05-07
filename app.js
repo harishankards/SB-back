@@ -270,7 +270,7 @@ app.get('/companies/get', authenticatorController.verifyToken, companyDataProvid
 app.delete('/companies/delete', authenticatorController.verifyToken, companyDataReceiverController.deleteCompany);
 
 // Projects
-
+app.get('/projects/all', authenticatorController.verifyToken, projectDataProviderController.getAllProjects);
 app.post('/projects/new', authenticatorController.verifyToken, projectDataReceiverController.createProject);
 app.get('/projects/get', authenticatorController.verifyToken, projectDataProviderController.getProject);
 app.post('/projects/upvotes', authenticatorController.verifyToken, projectDataReceiverController.addUpvotes);
