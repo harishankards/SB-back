@@ -54,6 +54,7 @@ const companyDataReceiverController =  require('./controllers/api-guys/datarecei
 const contestDataReceiverController =  require('./controllers/api-guys/datareceiver/contest');
 const projectDataReceiverController =  require('./controllers/api-guys/datareceiver/project');
 const awardDataReceiverController = require('./controllers/api-guys/datareceiver/award');
+const attachmentReceiverController = require('./controllers/api-guys/datareceiver/attachment');
 
 
 /**
@@ -292,7 +293,8 @@ app.post('/awards/new', authenticatorController.verifyToken, awardDataReceiverCo
 app.delete('/awards/delete', authenticatorController.verifyToken, awardDataReceiverController.deleteAward);
 
 // Attachments
-app.get('/attachments', )
+app.get('/attachments', authenticatorController.verifyToken, attachmentProviderController.getAttachments);
+app.post('/attachments', authenticatorController.verifyToken, attachmentReceiverController.createAttachment);
 /**
  * Error Handler.
  */
