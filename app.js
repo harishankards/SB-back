@@ -278,7 +278,7 @@ app.post('/projects/upvotes/remove', authenticatorController.verifyToken, projec
 app.delete('/projects/delete', authenticatorController.verifyToken, projectDataReceiverController.deleteProject);
 
 // Contests
-
+app.get('/contests/all', authenticatorController.verifyToken, contestDataProviderController.getAllContests);
 app.post('/contests/new', authenticatorController.verifyToken, contestDataReceiverController.createContest);
 app.get('/contests/get', authenticatorController.verifyToken, contestDataProviderController.getContest);
 app.post('/contests/registrations', authenticatorController.verifyToken, contestDataReceiverController.addRegistrations);

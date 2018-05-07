@@ -25,3 +25,23 @@ exports.getContest = (req, res) => {
     }
   })
   }
+
+  exports.getAllContests = (req, res) => {
+    console.log('inside the get all contests', req.body)
+    jwt.verify(req.token, 'secret', {expiresIn: '10h'}, (authErr, authData) => {
+      if(authErr) {
+        console.log('autherr', authErr)
+        res.sendStatus(403);
+      } else {
+        Contest.find({}, (err, contests) => {
+          if(err) {
+              console.log('err',err)
+          }
+          res.json({
+            contests,
+            authData
+          });
+        })
+      }
+    });
+  }
