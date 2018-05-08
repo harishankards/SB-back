@@ -7,7 +7,7 @@ const jwt = require('jsonwebtoken');
 
 
 exports.createAward = (req, res) => {
-  console.log('inside award creation project',req.body)
+  console.log('inside award creation',req.body)
   jwt.verify(req.token, 'secret', {expiresIn: '10h'}, (authErr, authData) => {
     if(authErr) {
       console.log('autherr', authErr)
@@ -82,6 +82,29 @@ exports.createAward = (req, res) => {
     }
   })
 
+}
+
+exports.updateAward = (req, res) => {
+  console.log('inside award updation',req.body)
+  jwt.verify(req.token, 'secret', {expiresIn: '10h'}, (authErr, authData) => {
+    if(authErr) {
+      console.log('autherr', authErr)
+      res.sendStatus(403);
+    } else {
+      const awardId = req.body._id;
+      
+      Award.findByIdAndUpdate(awardId, req.body, (err, updated) => {
+        if(err) {
+          console.log('err in updating the award', err)
+          res.status(401).send(err)
+        }
+        else {
+          console.log('award updated', updated)        
+          res.status(200).send('award_updated')    
+        }
+      }) 
+    }
+    })
 }
 
 exports.deleteAward = (req, res) => {
