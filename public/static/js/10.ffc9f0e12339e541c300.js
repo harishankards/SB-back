@@ -1,0 +1,2 @@
+webpackJsonp([10],{P8Ml:function(e,t,n){"use strict";var l=function(){var e=this,t=e.$createElement;return(e._self._c||t)("h1",[e._v("this is the upcoming contests page")])},s=[],r={render:l,staticRenderFns:s};t.a=r},VYL5:function(e,t,n){"use strict";Object.defineProperty(t,"__esModule",{value:!0});var l=n("P8Ml"),s=n("VU/8"),r=s(null,l.a,!1,null,null,null);t.default=r.exports}});
+//# sourceMappingURL=10.ffc9f0e12339e541c300.js.map
