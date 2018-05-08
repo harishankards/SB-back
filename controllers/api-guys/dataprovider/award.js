@@ -25,3 +25,23 @@ exports.getAward = (req, res) => {
       }
     })
   }
+
+  exports.getAllAwards = (req, res) => {
+    console.log('inside the get all awards', req.body)
+    jwt.verify(req.token, 'secret', {expiresIn: '10h'}, (authErr, authData) => {
+      if(authErr) {
+        console.log('autherr', authErr)
+        res.sendStatus(403);
+      } else {
+        Award.find({}, (err, awards) => {
+          if(err) {
+              console.log('err',err)
+          }
+          res.json({
+            awards,
+            authData
+          });
+        })
+      }
+    });
+  }

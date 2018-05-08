@@ -26,7 +26,7 @@ exports.authenticate = (req, res) => {
 
 
 exports.verifyToken = (req, res, next) => {
-  console.log('inside the verify token')
+  console.log('inside the verify token', req.headers['authorization'])
   const bearerHeader = req.headers['authorization'];
 
   if (!bearerHeader) {
