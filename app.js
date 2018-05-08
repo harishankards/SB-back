@@ -282,6 +282,7 @@ app.delete('/projects/delete', authenticatorController.verifyToken, projectDataR
 app.get('/contests/all', authenticatorController.verifyToken, contestDataProviderController.getAllContests);
 app.post('/contests/new', authenticatorController.verifyToken, contestDataReceiverController.createContest);
 app.get('/contests/get', authenticatorController.verifyToken, contestDataProviderController.getContest);
+app.put('/contests/update', authenticatorController.verifyToken, contestDataReceiverController.updateContest);
 app.post('/contests/registrations', authenticatorController.verifyToken, contestDataReceiverController.addRegistrations);
 app.post('/contests/registrations/remove', authenticatorController.verifyToken, contestDataReceiverController.removeRegistrations);
 app.delete('/contests/delete', authenticatorController.verifyToken, contestDataReceiverController.deleteContest);

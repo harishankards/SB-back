@@ -62,6 +62,29 @@ exports.createContest = (req, res) => {
   })
 }
 
+exports.updateContest = (req, res) => {
+  console.log('inside contest updation',req.body)
+  jwt.verify(req.token, 'secret', {expiresIn: '10h'}, (authErr, authData) => {
+    if(authErr) {
+      console.log('autherr', authErr)
+      res.sendStatus(403);
+    } else {
+      const contestId = req.body._id;
+      
+      Contest.findByIdAndUpdate(contestId, req.body, (err, updated) => {
+        if(err) {
+          console.log('err in updating the contest', err)
+          res.status(401).send(err)
+        }
+        else {
+          console.log('contest updated', updated)        
+          res.status(200).send('contest_updated')    
+        }
+      }) 
+    }
+    })
+}
+
 exports.addRegistrations = (req, res) => {
   console.log('inside adding registrations', req.body)
   jwt.verify(req.token, 'secret', {expiresIn: '10h'}, (authErr, authData) => {
