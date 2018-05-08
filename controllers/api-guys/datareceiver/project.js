@@ -62,6 +62,29 @@ exports.createProject = (req, res) => {
   })
 }
 
+exports.updateProject = (req, res) => {
+  console.log('inside project updation',req.body)
+  jwt.verify(req.token, 'secret', {expiresIn: '10h'}, (authErr, authData) => {
+    if(authErr) {
+      console.log('autherr', authErr)
+      res.sendStatus(403);
+    } else {
+      const projectId = req.body._id;
+      
+      Project.findByIdAndUpdate(projectId, req.body, (err, updated) => {
+        if(err) {
+          console.log('err in saving the project', err)
+          res.status(401).send(err)
+        }
+        else {
+          console.log('project updated', updated)        
+          res.status(200).send('project_updated')    
+        }
+      }) 
+    }
+    })
+}
+
 exports.addUpvotes = (req, res) => {
   console.log('inside adding upvotes', req.body)
   jwt.verify(req.token, 'secret', {expiresIn: '10h'}, (authErr, authData) => {
