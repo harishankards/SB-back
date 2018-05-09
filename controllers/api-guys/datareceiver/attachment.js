@@ -16,8 +16,9 @@ exports.createAttachment = (req, res) => {
 
   } else {
     console.log('file received');
-    return res.send({
-      success: true
+    return res.json({
+      success: true,
+      filepath: req.file.path
     })
   }
 }
