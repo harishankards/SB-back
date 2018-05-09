@@ -6,7 +6,7 @@
     "type": "git",
     "url": ""
   },
-  "author": "HS",
+  "author": "HS <hs@spritle.com>",
   "license": "",
   "scripts": {
     "postinstall": "npm rebuild node-sass",

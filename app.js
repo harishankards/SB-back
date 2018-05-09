@@ -22,7 +22,15 @@ const multer = require('multer');
 const cors = require('cors');
 const jwt = require('jsonwebtoken');
 
-const upload = multer({ dest: path.join(__dirname, 'uploads') });
+const storage = multer.diskStorage({
+  destination: function (req, file, callback) {
+    callback(null, './uploads/');
+  },
+  filename: function (req, file, callback) {
+    callback(null, new Date().toISOString() + file.originalname)
+  }
+})
+const upload = multer({storage: storage});
 
 /**
  * Load environment variables from .env file, where API keys and passwords are configured.
@@ -297,7 +305,7 @@ app.delete('/awards/delete', authenticatorController.verifyToken, awardDataRecei
 
 // Attachments
 app.get('/attachments', authenticatorController.verifyToken, attachmentProviderController.getAttachments);
-app.post('/attachments', authenticatorController.verifyToken, attachmentReceiverController.createAttachment);
+app.post('/attachments', authenticatorController.verifyToken, upload.single('file'), attachmentReceiverController.createAttachment);
 /**
  * Error Handler.
  */

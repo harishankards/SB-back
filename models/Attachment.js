@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const attachmentSchema = new Schema({
 
-title : String,
+content : {data: Buffer, contentType: String},
 name: String,
 owner: {
   role: String,
