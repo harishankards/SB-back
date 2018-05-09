@@ -30,7 +30,22 @@ const storage = multer.diskStorage({
     callback(null, new Date().toISOString() + file.originalname)
   }
 })
-const upload = multer({storage: storage});
+
+const fileFilter = (req, file, callback) => {
+  if(file.mimetype === 'image/jpeg' || file.mimetype === 'image/png' || file.mimetype === 'pdf') {
+    callback(null, true)
+  } else {
+    callback(null, false)
+  }
+}
+
+const upload = multer({
+  storage: storage,
+  limits: {
+    fileSize: 1024 * 1024 * 5
+  },
+  fileFilter: fileFilter
+});
 
 /**
  * Load environment variables from .env file, where API keys and passwords are configured.
