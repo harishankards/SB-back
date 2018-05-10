@@ -69,18 +69,26 @@ exports.updateContest = (req, res) => {
       console.log('autherr', authErr)
       res.sendStatus(403);
     } else {
-      const contestId = req.body._id;
+      const host = req.body.host
+      Company.findOne({email:host}, (companyErr, company) => {
+        if (companyErr) {
+          console.log('err in find the company', companyErr)
+          res.status(403).send('company not found')
+        } else {
+          const contestId = req.body._id;
       
-      Contest.findByIdAndUpdate(contestId, req.body, (err, updated) => {
-        if(err) {
-          console.log('err in updating the contest', err)
-          res.status(401).send(err)
+          Contest.findByIdAndUpdate(contestId, req.body, (err, updated) => {
+            if(err) {
+              console.log('err in updating the contest', err)
+              res.status(401).send(err)
+            }
+            else {
+              console.log('contest updated', updated)        
+              res.status(200).send('contest_updated')    
+            }
+          }) 
         }
-        else {
-          console.log('contest updated', updated)        
-          res.status(200).send('contest_updated')    
-        }
-      }) 
+      })
     }
     })
 }
