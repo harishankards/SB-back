@@ -211,7 +211,7 @@ app.get('/api/paypal/success', apiController.getPayPalSuccess);
 app.get('/api/paypal/cancel', apiController.getPayPalCancel);
 app.get('/api/lob', apiController.getLob);
 app.get('/api/upload', apiController.getFileUpload);
-app.post('/api/upload', upload.single('myFile'), apiController.postFileUpload);
+app.post('/api/upload', upload.array('myFiles'), apiController.postFileUpload);
 app.get('/api/pinterest', passportConfig.isAuthenticated, passportConfig.isAuthorized, apiController.getPinterest);
 app.post('/api/pinterest', passportConfig.isAuthenticated, passportConfig.isAuthorized, apiController.postPinterest);
 app.get('/api/google-maps', apiController.getGoogleMaps);
@@ -321,6 +321,7 @@ app.delete('/awards/delete', authenticatorController.verifyToken, awardDataRecei
 // Attachments
 app.get('/attachments', authenticatorController.verifyToken, attachmentProviderController.getAttachments);
 app.post('/attachments', authenticatorController.verifyToken, upload.single('file'), attachmentReceiverController.createAttachment);
+app.delete('/attachments', authenticatorController.verifyToken, attachmentReceiverController.deleteAttachment);
 /**
  * Error Handler.
  */
