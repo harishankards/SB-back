@@ -323,6 +323,8 @@ app.get('/attachments', authenticatorController.verifyToken, attachmentProviderC
 app.post('/attachments', authenticatorController.verifyToken, upload.single('file'), attachmentReceiverController.createAttachment);
 app.delete('/attachments', authenticatorController.verifyToken, attachmentReceiverController.deleteAttachment);
 app.post('/attachments/signedUrlGet', authenticatorController.verifyToken, attachmentReceiverController.signedUrlGet);
+app.post('/attachments/signedUrlPut', authenticatorController.verifyToken, attachmentReceiverController.signedUrlPut);
+
 /**
  * Error Handler.
  */

@@ -74,7 +74,20 @@ exports.signedUrlGet = (req, res) => {
   })
 }
 
-
+exports.signedUrlPut = (req, res) => {
+  console.log('inside signedUrlPut')
+  let file = req.body.file;
+  let key = req.body.key;
+  generateSignature(
+    'putObject',
+    file,
+    key,
+  )
+  .then((signature) => {
+    console.log(signature)
+    res.send(signature)
+  })
+}
 
 
 
