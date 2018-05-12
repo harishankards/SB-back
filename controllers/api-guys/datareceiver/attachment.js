@@ -52,6 +52,28 @@ const generateSignature = (method, file, key, expires = serverConfig.s3.defaultE
   })
 }
 
+// let file = {
+//   name: "my_image.jpg",
+//   type: "image/jpeg"
+// }
+
+// let key = 'images/my_image.jpg'
+
+exports.signedUrlGet = (req, res) => {
+  console.log('inside signedUrlGet')
+  let file = req.body.file;
+  let key = req.body.key;
+  generateSignature(
+    'getObject',
+    file,
+    key,
+  )
+  .then((signature) => {
+    console.log(signature)
+    res.send(signature)
+  })
+}
+
 
 
 

@@ -322,6 +322,7 @@ app.delete('/awards/delete', authenticatorController.verifyToken, awardDataRecei
 app.get('/attachments', authenticatorController.verifyToken, attachmentProviderController.getAttachments);
 app.post('/attachments', authenticatorController.verifyToken, upload.single('file'), attachmentReceiverController.createAttachment);
 app.delete('/attachments', authenticatorController.verifyToken, attachmentReceiverController.deleteAttachment);
+app.post('/attachments/signedUrlGet', authenticatorController.verifyToken, attachmentReceiverController.signedUrlGet);
 /**
  * Error Handler.
  */
