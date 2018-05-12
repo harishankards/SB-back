@@ -16,8 +16,6 @@ exports.getAttachments = (req, res) => {
       const filePath = req.query.filepath
       console.log('filepath', filePath)
       if (filePath) {
-        console.log('filepath is there', __dirname + '..', '..', '..' + filePath)
-        // res.sendFile(filePath, { root: __dirname + '../../../'})
         res.sendFile(path.join(__dirname, '..', '..', '..', filePath))
       } else {
         res.status(404).send('file not found')
