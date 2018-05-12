@@ -18,12 +18,39 @@ const serverConfig = {
   }
 }
 
+const generateSignature = (method, file, key, expires = serverConfig.s3.defaultExpiry) => {
+  awsSDK.config.update({
+    signatureVersion: 'v4',
+    bucket: serverConfig.s3.bucket,
+    region: serverConfig.s3.region,
+    accessKeyId: serverConfig.s3.accessKeyId,
+    secretAccessKey: serverConfig.s3.secretAccessKey
+  })
 
+  const s3 = new awsSDK.S3()
 
+  const params = {
+    Bucket: serverConfig.s3.bucket,
+    Key: key,
+    Expires: expires
+  }
 
+  return new Promise((resolve, reject) => {
+    s3.getSignedUrl(method, params, (error, signedUrl) => {
+      if (error) {
+        reject(error)
+      }
 
+      let HTTPMethod = method.replace('Object', '').toUpperCase()
 
-
+      resolve({
+        method: HTTPMethod,
+        key: key,
+        url: signedUrl
+      })
+    })
+  })
+}
 
 
 
