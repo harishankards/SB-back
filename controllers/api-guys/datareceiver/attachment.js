@@ -105,6 +105,7 @@ exports.createAttachment = (req, res) => {
       type: req.file.mimetype
     };
     const key = req.file.filename;
+    const filepath = req.file.path;
     generateSignature(
       'getObject',
       file,
@@ -112,19 +113,26 @@ exports.createAttachment = (req, res) => {
     )
     .then((signature) => {
       console.log(signature)
+      fs.unlink(filepath, (success, err) => {
+        if (err) {
+          console.log('err in deleting file', err)
+        }
+        console.log('deleted the file')
+      })
       res.send(signature)
     })
   }
 }
 
 exports.deleteAttachment = (req, res) => {
-  console.log('inside the delete attachment function', req.body);
-  const filepath = req.body.filepath[0]
-  fs.unlink(filepath, (success, err) => {
-    if (err) {
-      console.log('err in deleting file', err)
-    }
-    console.log('deleted')
-  })
+  console.log('inside the delete attachment function');
+  // const filepath = req.body.filepath[0]
+  // fs.unlink(filepath, (success, err) => {
+  //   if (err) {
+  //     console.log('err in deleting file', err)
+  //   }
+  //   console.log('deleted')
+  // })
+  res.send('dummy function')
 }
 
