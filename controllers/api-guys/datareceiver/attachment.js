@@ -90,31 +90,29 @@ exports.signedUrlPut = (req, res) => {
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
 exports.createAttachment = (req, res) => {
   console.log('inside attachment creation project', req.file)
   if (!req.file) {
     console.log("No file received");
-    return res.send({
+    return res.status(403).send({
       success: false
     });
 
   } else {
     console.log('file received');
-    return res.json({
-      success: true,
-      filepath: req.file.path,
-      filename: req.file.filename
+    const file = {
+      name: req.file.filename,
+      type: req.file.mimetype
+    };
+    const key = req.file.filename;
+    generateSignature(
+      'getObject',
+      file,
+      key,
+    )
+    .then((signature) => {
+      console.log(signature)
+      res.send(signature)
     })
   }
 }
@@ -126,7 +124,7 @@ exports.deleteAttachment = (req, res) => {
     if (err) {
       console.log('err in deleting file', err)
     }
-    console.log('deleted', success)
+    console.log('deleted')
   })
 }
 
