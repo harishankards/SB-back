@@ -85,7 +85,24 @@ exports.signedUrlPut = (req, res) => {
   )
   .then((signature) => {
     console.log(signature)
-    res.send(signature)
+    var url = signature.url;
+    const urlNameRemoved = url.split("?").pop();
+    const newParamsObj = JSON.parse('{"' + decodeURI(urlNameRemoved.replace(/&/g, "\",\"").replace(/=/g,"\":\"")) + '"}')
+    console.log('newparamsobj', newParamsObj)    
+    const signedObj = JSON.stringify({
+      signature: {
+        "Content-Type":"",
+        "acl":"public-read-write",
+        "success_action_status":"201",
+        "policy":"Policy1526045161391",
+        ...newParamsObj,
+        "key":""
+      },
+      postEndPoint: "\/\/student-burger.s3.amazonaws.com\/images"
+    })
+    console.log('signedObj', signedObj)    
+    
+    res.send(signedObj)
   })
 }
 
