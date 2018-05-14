@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const Contest = require('../../../models/Contest');
 const Company = require('../../../models/Company');
 const jwt = require('jsonwebtoken');
+const Student = require('../../../models/Student');
 
 
 exports.createContest = (req, res) => {
@@ -121,7 +122,15 @@ exports.addRegistrations = (req, res) => {
                 }
                 else {
                   console.log('updated the contest registration', contestUpdated)
-                  res.status(200).send(contestUpdated)
+                  Student.findByIdAndUpdate(studentId, {$push: {contests: contestId}}, (studentUpdateErr, studentUpdated) => {
+                    if (studentUpdateErr) {
+                      console.log('could not update student', studentUpdateErr)
+                      res.status(403).send(studentUpdateErr)                      
+                    } else {
+                      console.log('studen updated')
+                      res.status(200).send(contestUpdated)
+                    }
+                  })
                 }
               })
             }
