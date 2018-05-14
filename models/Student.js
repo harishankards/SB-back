@@ -27,7 +27,8 @@ const studentSchema = new Schema({
     picture: String
   },
   awards: [{ type: Schema.Types.ObjectId, ref: 'awards' }],  
-  projects: [{ type: Schema.Types.ObjectId, ref: 'projects' }]
+  projects: [{ type: Schema.Types.ObjectId, ref: 'projects' }],
+  contests: [{ type: Schema.Types.ObjectId, ref: 'contests' }]
 
 }, { timestamps: true });
 
