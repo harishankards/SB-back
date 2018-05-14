@@ -52,12 +52,12 @@ const generateSignature = (method, file, key, expires = serverConfig.s3.defaultE
   })
 }
 
-// let file = {
-//   name: "my_image.jpg",
-//   type: "image/jpeg"
-// }
+let file = {
+  name: "my_image.jpg",
+  type: "image/jpeg"
+}
 
-// let key = 'images/my_image.jpg'
+let key = 'images/my_image.jpg'
 
 exports.signedUrlGet = (req, res) => {
   console.log('inside signedUrlGet')
@@ -76,8 +76,8 @@ exports.signedUrlGet = (req, res) => {
 
 exports.signedUrlPut = (req, res) => {
   console.log('inside signedUrlPut')
-  let file = req.body.file;
-  let key = req.body.key;
+  // let file = req.body.file;
+  // let key = req.body.key;
   generateSignature(
     'putObject',
     file,
