@@ -162,3 +162,51 @@ exports.removeUpvotes = (req, res) => {
     }
   })
 }
+
+exports.deleteCompanyProject = (req, res) => {
+  console.log('inside the delete company project function', req.body);
+  jwt.verify(req.token, 'secret', {expiresIn: '10h'}, (authErr, authData) => {
+    if(authErr) {
+      console.log('autherr', authErr)
+      res.sendStatus(403);
+    } else {
+      const projectId = req.body.project;
+      CompanyProject.findById(projectId, (err, project) => {
+        if (err) {
+          console.log('could not find project', err)
+          res.status(404).send(err)
+        }
+        else if (project === null) {
+          console.log('could not find project', project)
+          res.status(404).send('could not find project')
+        }
+        else {
+          console.log('found the contest', project)
+          CompanyProject.findByIdAndRemove(project._id, (removeErr, projectRemoved) => {
+            if(removeErr) {
+              console.log('could not remove project', removeErr)
+              res.status(403).send(removeErr)
+            }
+            else if (projectRemoved === null) {
+              console.log('could not remove project', projectRemoved)
+              res.status(403).send('could not remove project')
+            }
+            else {
+              console.log('removed project', projectRemoved)
+              Company.findByIdAndUpdate(project.author, {$pull: {projects: projectRemoved._id}}, (updateErr, updated) => {
+                if(updateErr) {
+                  console.log('could not upda te the company', updateErr)
+                  res.status(403).send('could not update student')
+                }
+                else {
+                  console.log('updated the company')
+                  res.status(200).send('removed project')     
+                }
+              })
+            }
+          })
+        }
+      })
+    }
+  })
+}
