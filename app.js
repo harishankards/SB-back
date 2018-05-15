@@ -78,6 +78,7 @@ const contestDataReceiverController =  require('./controllers/api-guys/datarecei
 const projectDataReceiverController =  require('./controllers/api-guys/datareceiver/project');
 const awardDataReceiverController = require('./controllers/api-guys/datareceiver/award');
 const attachmentReceiverController = require('./controllers/api-guys/datareceiver/attachment');
+const companyProjectDataReceiverController = require('./controllers/api-guys/datareceiver/companyproject');
 
 
 /**
@@ -300,6 +301,10 @@ app.post('/projects/upvotes', authenticatorController.verifyToken, projectDataRe
 app.post('/projects/upvotes/remove', authenticatorController.verifyToken, projectDataReceiverController.removeUpvotes);
 app.put('/projects/update', authenticatorController.verifyToken, projectDataReceiverController.updateProject)
 app.delete('/projects/delete', authenticatorController.verifyToken, projectDataReceiverController.deleteProject);
+
+
+// Company projects
+app.get('/companyprojects/all', authenticatorController.verifyToken, )
 
 // Contests
 app.get('/contests/all', authenticatorController.verifyToken, contestDataProviderController.getAllContests);
