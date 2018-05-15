@@ -30,3 +30,22 @@ exports.getProject = (req, res) => {
     }
   })
 }
+
+exports.getAllProjects = (req, res) => {
+  console.log('inside the get all projects', req.body)
+  jwt.verify(req.token, 'secret', {expiresIn: '10h'}, (authErr, authData) => {
+    if(authErr) {
+      console.log('autherr', authErr)
+      res.sendStatus(403);
+    } else {
+      CompanyProject.find({}, (err, projects) => {
+        if(err) {
+            console.log('err',err)
+        }
+        res.json({
+          projects
+        });
+      })
+    }
+  });
+}

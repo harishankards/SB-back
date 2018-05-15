@@ -70,6 +70,7 @@ const contestDataProviderController =  require('./controllers/api-guys/dataprovi
 const projectDataProviderController =  require('./controllers/api-guys/dataprovider/project');
 const awardDataProviderController = require('./controllers/api-guys/dataprovider/award');
 const attachmentProviderController = require('./controllers/api-guys/dataprovider/attachment');
+const companyProjectDataProviderController = require('./controllers/api-guys/dataprovider/companyproject');
 
 // Data receivers
 const studentDataReceiverController =  require('./controllers/api-guys/datareceiver/student');
@@ -304,7 +305,9 @@ app.delete('/projects/delete', authenticatorController.verifyToken, projectDataR
 
 
 // Company projects
-app.get('/companyprojects/all', authenticatorController.verifyToken, )
+app.get('/companyprojects/all', authenticatorController.verifyToken, companyProjectDataProviderController.getAllProjects);
+app.get('/companyprojects', authenticatorController.verifyToken, companyProjectDataProviderController.getProject);
+
 
 // Contests
 app.get('/contests/all', authenticatorController.verifyToken, contestDataProviderController.getAllContests);
