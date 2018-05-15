@@ -24,7 +24,7 @@ exports.createCompanyProject = (req, res) => {
       }
       else {
         Company.findOne({email:author}, (companyErr, company) => {
-          if (studentErr) {
+          if (companyErr) {
             console.log('error in finding the company', companyErr)
             res.status(404).send(companyErr)
           }
@@ -34,7 +34,7 @@ exports.createCompanyProject = (req, res) => {
               title: title,
               abstract: abstract,
               description: description,
-              author: student._id,
+              author: company._id,
               tags: tags,
               files: files
             })
@@ -47,7 +47,7 @@ exports.createCompanyProject = (req, res) => {
                 console.log('project saved', saved)            
                 Company.findByIdAndUpdate(saved.author, {$push: {projects: saved._id}}, (companyErr2, company2) =>  {
                   if (companyErr2) {
-                    console.log('error in updating the student', studentErr2)
+                    console.log('error in updating the company', companyErr2)
                   }
                   else {
                     console.log('company updated', company2)

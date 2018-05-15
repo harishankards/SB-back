@@ -307,6 +307,7 @@ app.delete('/projects/delete', authenticatorController.verifyToken, projectDataR
 // Company projects
 app.get('/companyprojects/all', authenticatorController.verifyToken, companyProjectDataProviderController.getAllProjects);
 app.get('/companyprojects', authenticatorController.verifyToken, companyProjectDataProviderController.getProject);
+app.post('/companyprojects', authenticatorController.verifyToken, companyProjectDataReceiverController.createCompanyProject);
 
 
 // Contests
