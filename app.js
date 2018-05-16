@@ -21,6 +21,7 @@ const sass = require('node-sass-middleware');
 const multer = require('multer');
 const cors = require('cors');
 const jwt = require('jsonwebtoken');
+const http = require('http');
 const io = require('socket.io')(http);
 
 io.on('connection', function(socket){
