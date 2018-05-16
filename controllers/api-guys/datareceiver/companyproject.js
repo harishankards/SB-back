@@ -196,7 +196,7 @@ exports.deleteCompanyProject = (req, res) => {
               Company.findByIdAndUpdate(project.author, {$pull: {projects: projectRemoved._id}}, (updateErr, updated) => {
                 if(updateErr) {
                   console.log('could not upda te the company', updateErr)
-                  res.status(403).send('could not update student')
+                  res.status(403).send('could not update company')
                 }
                 else {
                   console.log('updated the company')
