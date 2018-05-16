@@ -21,6 +21,11 @@ const sass = require('node-sass-middleware');
 const multer = require('multer');
 const cors = require('cors');
 const jwt = require('jsonwebtoken');
+const io = require('socket.io')(http);
+
+io.on('connection', function(socket){
+  console.log('An user connected');
+});
 
 const storage = multer.diskStorage({
   destination: function (req, file, callback) {
