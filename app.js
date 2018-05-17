@@ -77,6 +77,7 @@ const projectDataProviderController =  require('./controllers/api-guys/dataprovi
 const awardDataProviderController = require('./controllers/api-guys/dataprovider/award');
 const attachmentProviderController = require('./controllers/api-guys/dataprovider/attachment');
 const companyProjectDataProviderController = require('./controllers/api-guys/dataprovider/companyproject');
+const tagDataProviderController = require('./controllers/api-guys/dataprovider/tag');
 
 // Data receivers
 const studentDataReceiverController =  require('./controllers/api-guys/datareceiver/student');
@@ -340,6 +341,9 @@ app.post('/attachments', authenticatorController.verifyToken, upload.single('fil
 app.delete('/attachments', authenticatorController.verifyToken, attachmentReceiverController.deleteAttachment);
 app.post('/attachments/signedUrlGet', authenticatorController.verifyToken, attachmentReceiverController.signedUrlGet);
 app.post('/attachments/signedUrlPut', authenticatorController.verifyToken, attachmentReceiverController.signedUrlPut);
+
+app.get('/getalltags', authenticatorController.verifyToken, tagDataProviderController.getAllTags);
+app.get('/tags', authenticatorController.verifyToken, tagDataProviderController.getTag);
 
 /**
  * Error Handler.
