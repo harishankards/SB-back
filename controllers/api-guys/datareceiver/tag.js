@@ -6,7 +6,7 @@ const jwt = require('jsonwebtoken');
 const Project = require('../../../models/Project');
 const Contest = require('../../../models/Contest');
 const Company = require('../../../models/Company');
-const CompanyTag = require('../../../models/CompanyTag');
+const CompanyProject = require('../../../models/CompanyProject');
 const Award = require('../../../models/Award');
 
 

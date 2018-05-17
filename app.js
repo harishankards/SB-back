@@ -87,6 +87,7 @@ const projectDataReceiverController =  require('./controllers/api-guys/datarecei
 const awardDataReceiverController = require('./controllers/api-guys/datareceiver/award');
 const attachmentReceiverController = require('./controllers/api-guys/datareceiver/attachment');
 const companyProjectDataReceiverController = require('./controllers/api-guys/datareceiver/companyproject');
+const tagDataReceiverController = require('./controllers/api-guys/datareceiver/tag');
 
 
 /**
@@ -342,8 +343,12 @@ app.delete('/attachments', authenticatorController.verifyToken, attachmentReceiv
 app.post('/attachments/signedUrlGet', authenticatorController.verifyToken, attachmentReceiverController.signedUrlGet);
 app.post('/attachments/signedUrlPut', authenticatorController.verifyToken, attachmentReceiverController.signedUrlPut);
 
+// Tags
 app.get('/getalltags', authenticatorController.verifyToken, tagDataProviderController.getAllTags);
 app.get('/tags', authenticatorController.verifyToken, tagDataProviderController.getTag);
+app.post('/tags', authenticatorController.verifyToken, tagDataReceiverController.createTag);
+app.put('/tags', authenticatorController.verifyToken, tagDataReceiverController.updateTag);
+app.delete('/tags', authenticatorController.verifyToken, tagDataReceiverController.deleteTag);
 
 /**
  * Error Handler.
