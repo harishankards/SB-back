@@ -21,8 +21,17 @@ const sass = require('node-sass-middleware');
 const multer = require('multer');
 const cors = require('cors');
 const jwt = require('jsonwebtoken');
-const http = require('http');
-const io = require('socket.io')(http);
+// const http = require('http');
+
+/**
+ * Create Express server.
+ */
+const app = express();
+
+var server = require('http').Server(app);
+const io = require('socket.io')(server);
+
+// server.listen(3000);
 
 io.on('connection', function(socket){
   console.log("---------------------------------------------------------")
@@ -105,10 +114,6 @@ const tagDataReceiverController = require('./controllers/api-guys/datareceiver/t
  */
 const passportConfig = require('./config/passport');
 
-/**
- * Create Express server.
- */
-const app = express();
 
 /**
  * Connect to MongoDB.
