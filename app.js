@@ -25,7 +25,17 @@ const http = require('http');
 const io = require('socket.io')(http);
 
 io.on('connection', function(socket){
+  console.log("---------------------------------------------------------")
   console.log('An user connected');
+  console.log("---------------------------------------------------------")
+  socket.on('disconnect', function(){
+    console.log('user disconnected');
+  });  
+  
+  socket.on('emit_method', function(msg){
+    console.log('message: ' + msg);
+  }); 
+  
 });
 
 const storage = multer.diskStorage({
@@ -154,6 +164,13 @@ app.use((req, res, next) => {
   res.locals.user = req.user;
   next();
 });
+
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  next();
+});
+
 app.use((req, res, next) => {
   // After successful login, redirect back to the intended page
   if (!req.user &&
