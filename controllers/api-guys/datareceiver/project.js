@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const Project = require('../../../models/Project');
 const Student = require('../../../models/Student');
+const Tag = require('../../../models/Tag');
 const jwt = require('jsonwebtoken');
 
 exports.createProject = (req, res) => {
@@ -47,11 +48,22 @@ exports.createProject = (req, res) => {
                 Student.findByIdAndUpdate(saved.author, {$push: {projects: saved._id}}, (studentErr2, student2) =>  {
                   if (studentErr2) {
                     console.log('error in updating the student', studentErr2)
+                    res.status(401).send(err)                    
                   }
                   else {
                     console.log('student updated', student2)
-                    global.io.emit('project created', 'yes created dude!!!')
-                    res.status(200).send('project_creation_success')
+                    saved.tags.map((tag) => {
+                      Tag.findByIdAndUpdate(tag.id, {$push: {projects: saved._id}}, (tagUpdateErr, tagUpdated) => {
+                        if (tagUpdateErr) {
+                          console.log('tag updateErr', tagUpdateErr)
+                          res.status(401).send(err)                
+                        } else {
+                          console.log('tag updated', tagUpdated)
+                          global.io.emit('project created', 'yes created dude!!!')
+                          res.status(200).send('project_creation_success')
+                        }
+                      })
+                    })
                   }
                 })
               }
