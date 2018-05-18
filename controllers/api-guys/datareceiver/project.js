@@ -56,14 +56,18 @@ exports.createProject = (req, res) => {
                       Tag.findByIdAndUpdate(tag.id, {$push: {projects: saved._id}}, (tagUpdateErr, tagUpdated) => {
                         if (tagUpdateErr) {
                           console.log('tag updateErr', tagUpdateErr)
-                          res.status(401).send(err)                
                         } else {
                           console.log('tag updated', tagUpdated)
-                          global.io.emit('project created', 'yes created dude!!!')
-                          res.status(200).send('project_creation_success')
                         }
                       })
                     })
+                    .next(function (tagUpdated2) {
+                      global.io.emit('project created', 'yes created dude!!!')
+                      res.status(200).send('project_creation_success')
+                    })
+                    // .catch(function (tagUpdateErr2) {
+                    //   res.status(401).send(tagUpdateErr2)                                        
+                    // })
                   }
                 })
               }
