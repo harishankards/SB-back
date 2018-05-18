@@ -50,7 +50,8 @@ exports.createProject = (req, res) => {
                   }
                   else {
                     console.log('student updated', student2)
-                    res.status(200).send('project_creation_success')    
+                    global.io.emit('project created', 'yes created dude!!!')
+                    res.status(200).send('project_creation_success')
                   }
                 })
               }

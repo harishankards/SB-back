@@ -376,9 +376,7 @@ const io = socket(server);
 
 
 io.on('connection', function(socket){
-  console.log("---------------------------------------------------------")
-  console.log('An user connected');
-  console.log("---------------------------------------------------------")
+  console.log('User connected');
   socket.on('disconnect', function(){
     console.log('user disconnected');
   });  
@@ -389,5 +387,6 @@ io.on('connection', function(socket){
   
 });
 
+global.io = io;
 
 module.exports = app;
