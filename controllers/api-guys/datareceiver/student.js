@@ -127,3 +127,29 @@ exports.login = (req, res, next) => {
     });
   })(req, res, next); 
 }
+
+exports.updateStudent = (req, res) => {
+  console.log('inside student updation',req.body)
+  jwt.verify(req.token, 'secret', {expiresIn: '10h'}, (authErr, authData) => {
+    if(authErr) {
+      console.log('autherr', authErr)
+      res.sendStatus(403);
+    } else if (authData === null) {
+      console.log('student not updated')
+      res.sendStatus(403);
+    } else {
+      const studentId = req.body._id;
+      
+      Student.findByIdAndUpdate(studentId, req.body, (err, updated) => {
+        if(err) {
+          console.log('err in updating the student', err)
+          res.status(401).send(err)
+        }
+        else {
+          console.log('student updated', updated)        
+          res.status(200).send('student_updated')    
+        }
+      }) 
+    }
+    })
+}
