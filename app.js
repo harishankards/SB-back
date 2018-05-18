@@ -21,6 +21,7 @@ const sass = require('node-sass-middleware');
 const multer = require('multer');
 const cors = require('cors');
 const jwt = require('jsonwebtoken');
+const socket = require('socket.io')
 // const http = require('http');
 
 /**
@@ -28,24 +29,7 @@ const jwt = require('jsonwebtoken');
  */
 const app = express();
 
-var server = require('http').Server(app);
-const io = require('socket.io')(server);
 
-// server.listen(3000);
-
-io.on('connection', function(socket){
-  console.log("---------------------------------------------------------")
-  console.log('An user connected');
-  console.log("---------------------------------------------------------")
-  socket.on('disconnect', function(){
-    console.log('user disconnected');
-  });  
-  
-  socket.on('emit_method', function(msg){
-    console.log('message: ' + msg);
-  }); 
-  
-});
 
 const storage = multer.diskStorage({
   destination: function (req, file, callback) {
@@ -380,9 +364,30 @@ app.use(errorHandler());
 /**
  * Start Express server.
  */
-app.listen(app.get('port'), () => {
+const server = app.listen(app.get('port'), () => {
   console.log('%s App is running at http://localhost:%d in %s mode', chalk.green('✓'), app.get('port'), app.get('env'));
   console.log('  Press CTRL-C to stop\n');
 });
+
+
+
+const io = socket(server);
+
+
+
+io.on('connection', function(socket){
+  console.log("---------------------------------------------------------")
+  console.log('An user connected');
+  console.log("---------------------------------------------------------")
+  socket.on('disconnect', function(){
+    console.log('user disconnected');
+  });  
+  
+  socket.on('emit_method', function(msg){
+    console.log('message: ' + msg);
+  }); 
+  
+});
+
 
 module.exports = app;
