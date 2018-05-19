@@ -4,6 +4,7 @@ const Project = require('../../../models/Project');
 const Student = require('../../../models/Student');
 const Tag = require('../../../models/Tag');
 const jwt = require('jsonwebtoken');
+const async = require('async');
 
 exports.createProject = (req, res) => {
   console.log('inside project creation project',req.body)
@@ -52,22 +53,24 @@ exports.createProject = (req, res) => {
                   }
                   else {
                     console.log('student updated', student2)
-                    saved.tags.map((tag) => {
+                    async.map(saved.tags, (tag) => {
                       Tag.findByIdAndUpdate(tag.id, {$push: {projects: saved._id}}, (tagUpdateErr, tagUpdated) => {
                         if (tagUpdateErr) {
-                          console.log('tag updateErr', tagUpdateErr)
+                        console.log('tag updateErr', tagUpdateErr)                                                  
                         } else {
                           console.log('tag updated', tagUpdated)
                         }
                       })
+                    }, (tagUpdateErr2, tagUpdated2) => {
+                      if (tagUpdateErr2) {
+                        console.log('tag updateErr', tagUpdateErr)                        
+                        res.status(401).send(tagUpdateErr2)
+                      } else {
+                        console.log('tagupdated final and going to emit', tagUpdated2)
+                        global.io.emit('project created', 'yes created dude!!!')
+                        res.status(200).send('project_creation_success')
+                      }
                     })
-                    .next(function (tagUpdated2) {
-                      global.io.emit('project created', 'yes created dude!!!')
-                      res.status(200).send('project_creation_success')
-                    })
-                    // .catch(function (tagUpdateErr2) {
-                    //   res.status(401).send(tagUpdateErr2)                                        
-                    // })
                   }
                 })
               }
