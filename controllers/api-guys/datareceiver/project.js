@@ -53,12 +53,13 @@ exports.createProject = (req, res) => {
                   }
                   else {
                     console.log('student updated', student2)
-                    async.map(saved.tags, (tag) => {
+                    async.map(saved.tags, (tag, callback) => {
                       Tag.findByIdAndUpdate(tag.id, {$push: {projects: saved._id}}, (tagUpdateErr, tagUpdated) => {
                         if (tagUpdateErr) {
                         console.log('tag updateErr', tagUpdateErr)                                                  
                         } else {
                           console.log('tag updated', tagUpdated)
+                          callback()
                         }
                       })
                     }, (tagUpdateErr2, tagUpdated2) => {
