@@ -201,7 +201,7 @@ exports.deleteCompanyProject = (req, res) => {
           res.status(404).send('could not find project')
         }
         else {
-          console.log('found the contest', project)
+          console.log('found the company projct', project)
           CompanyProject.findByIdAndRemove(project._id, (removeErr, projectRemoved) => {
             if(removeErr) {
               console.log('could not remove project', removeErr)
@@ -220,7 +220,24 @@ exports.deleteCompanyProject = (req, res) => {
                 }
                 else {
                   console.log('updated the company')
-                  res.status(200).send('removed project')     
+                  async.map(project.tags, (tag, callback) => {
+                    Tag.findByIdAndUpdate(tag.id, {$pull: {companyProjects: project._id}}, (tagUpdateErr, tagUpdated) => {
+                      if (tagUpdateErr) {
+                      console.log('tag updateErr', tagUpdateErr)                                                  
+                      } else {
+                        console.log('tag updated', tagUpdated)
+                        callback()
+                      }
+                    })
+                  }, (tagUpdateErr2, tagUpdated2) => {
+                    if (tagUpdateErr2) {
+                      console.log('tag updateErr', tagUpdateErr)                        
+                      res.status(401).send(tagUpdateErr2)
+                    } else {
+                      console.log('tagupdated final and going to emit', tagUpdated2)
+                      res.status(200).send('removed project')     
+                    }
+                  })  
                 }
               })
             }
