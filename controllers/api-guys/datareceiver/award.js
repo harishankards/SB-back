@@ -170,7 +170,24 @@ exports.deleteAward = (req, res) => {
                     }
                     else {
                       console.log('removed from student', removedFromStudent)
-                      res.status(200).send('award_deleted')
+                      async.map(award.tags, (tag, callback) => {
+                        Tag.findByIdAndUpdate(tag.id, {$pull: {awards: award._id}}, (tagUpdateErr, tagUpdated) => {
+                          if (tagUpdateErr) {
+                          console.log('tag updateErr', tagUpdateErr)                                                  
+                          } else {
+                            console.log('tag updated', tagUpdated)
+                            callback()
+                          }
+                        })
+                      }, (tagUpdateErr2, tagUpdated2) => {
+                        if (tagUpdateErr2) {
+                          console.log('tag updateErr', tagUpdateErr)                        
+                          res.status(401).send(tagUpdateErr2)
+                        } else {
+                          console.log('tagupdated final and going to emit', tagUpdated2)
+                          res.status(200).send('award_deleted')
+                        }
+                      })
                     }
                   })
                 }
