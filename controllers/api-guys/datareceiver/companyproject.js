@@ -4,6 +4,8 @@ const CompanyProject = require('../../../models/CompanyProject');
 const Company = require('../../../models/Company');
 const Student = require('../../../models/Student');
 const jwt = require('jsonwebtoken');
+const Tag = require('../../../models/Tag');
+const async = require('async');
 
 exports.createCompanyProject = (req, res) => {
   console.log('inside project creation project',req.body)
@@ -51,7 +53,25 @@ exports.createCompanyProject = (req, res) => {
                   }
                   else {
                     console.log('company updated', company2)
-                    res.status(200).send('project_creation_success')    
+                    async.map(saved.tags, (tag, callback) => {
+                      Tag.findByIdAndUpdate(tag.id, {$push: {companyProjects: saved._id}}, (tagUpdateErr, tagUpdated) => {
+                        if (tagUpdateErr) {
+                        console.log('tag updateErr', tagUpdateErr)                                                  
+                        } else {
+                          console.log('tag updated', tagUpdated)
+                          callback()
+                        }
+                      })
+                    }, (tagUpdateErr2, tagUpdated2) => {
+                      if (tagUpdateErr2) {
+                        console.log('tag updateErr', tagUpdateErr)                        
+                        res.status(401).send(tagUpdateErr2)
+                      } else {
+                        console.log('tagupdated final and going to emit', tagUpdated2)
+                        global.io.emit('companyproject created', 'yes created dude!!!')
+                        res.status(200).send('company_project_creation_success')
+                      }
+                    })
                   }
                 })
               }
