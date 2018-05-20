@@ -236,7 +236,24 @@ exports.deleteContest = (req, res) => {
                 }
                 else {
                  console.log('updated the company', updatedCompany) 
-                 res.status(200).send('removed contest')
+                 async.map(contest.tags, (tag, callback) => {
+                  Tag.findByIdAndUpdate(tag.id, {$pull: {contests: contest._id}}, (tagUpdateErr, tagUpdated) => {
+                    if (tagUpdateErr) {
+                    console.log('tag updateErr', tagUpdateErr)                                                  
+                    } else {
+                      console.log('tag updated', tagUpdated)
+                      callback()
+                    }
+                  })
+                }, (tagUpdateErr2, tagUpdated2) => {
+                  if (tagUpdateErr2) {
+                    console.log('tag updateErr', tagUpdateErr)                        
+                    res.status(401).send(tagUpdateErr2)
+                  } else {
+                    console.log('tagupdated final and going to emit', tagUpdated2)
+                    res.status(200).send('removed contest')
+                  }
+                })
                 }
               })
             }
