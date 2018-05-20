@@ -60,7 +60,25 @@ exports.createProject = (req, res) => {
                         console.log('tag updateErr', tagUpdateErr)                                                  
                         } else {
                           console.log('tag updated', tagUpdated)
-                          callback()
+                          let notification = {
+                            text: student2.email + 'posted a project',
+                            link: saved._id
+                          }
+                          async.map(tagUpdated.students, (studentToBeNotified, callback2) => {
+                            console.log('student to be notified', studentToBeNotified)
+                            Student.findByIdAndUpdate(studentToBeNotified, {$push: {notifications: notification}}, (pushErr, pushed) => {
+                              if (pushErr) {
+                                console.log('could not push the notification')
+                              } else {
+                                console.log('notification pushed', pushed)
+                              }
+                            })
+                          }, (studentUpdateErr, studentUpdated) => {
+                            if (studentUpdateErr) {
+                              console.log('student update err', studentUpdateErr)
+                            }
+                            callback()
+                          })
                         }
                       })
                     }, (tagUpdateErr2, tagUpdated2) => {
