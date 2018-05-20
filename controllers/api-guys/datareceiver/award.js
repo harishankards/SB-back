@@ -4,7 +4,8 @@ const Award = require('../../../models/Award');
 const Student = require('../../../models/Student');
 const Company = require('../../../models/Company');
 const jwt = require('jsonwebtoken');
-
+const Tag = require('../../../models/Tag');
+const async = require('async');
 
 exports.createAward = (req, res) => {
   console.log('inside award creation',req.body)
@@ -67,7 +68,25 @@ exports.createAward = (req, res) => {
                           }
                           else {
                             console.log('student updated', student2)
-                            res.status(200).send('award_creation_success')                            
+                            async.map(saved.tags, (tag, callback) => {
+                              Tag.findByIdAndUpdate(tag.id, {$push: {awards: saved._id}}, (tagUpdateErr, tagUpdated) => {
+                                if (tagUpdateErr) {
+                                console.log('tag updateErr', tagUpdateErr)                                                  
+                                } else {
+                                  console.log('tag updated', tagUpdated)
+                                  callback()
+                                }
+                              })
+                            }, (tagUpdateErr2, tagUpdated2) => {
+                              if (tagUpdateErr2) {
+                                console.log('tag updateErr', tagUpdateErr)                        
+                                res.status(401).send(tagUpdateErr2)
+                              } else {
+                                console.log('tagupdated final and going to emit', tagUpdated2)
+                                global.io.emit('award created', 'yes created dude!!!')
+                                res.status(200).send('award_creation_success') 
+                              }
+                            })
                           }
                         })
                       }
