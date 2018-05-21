@@ -52,7 +52,6 @@ exports.createProject = (req, res) => {
                     res.status(401).send(err)                    
                   }
                   else {
-                    let counter = 1                    
                     console.log('student updated', student2)
                     async.map(saved.tags, (tag, callback) => {
                       Tag.findByIdAndUpdate(tag.id, {$push: {projects: saved._id}}, (tagUpdateErr, tagUpdated) => {
@@ -63,7 +62,8 @@ exports.createProject = (req, res) => {
                           let notification = {
                             text: student2.email + ' posted a project',
                             link: saved._id,
-                            type: 'project'
+                            type: 'project',
+                            read: false
                           }
                           async.map(tagUpdated.students, (studentToBeNotified, callback2) => {
                             console.log('student to be notified', studentToBeNotified)
@@ -87,8 +87,7 @@ exports.createProject = (req, res) => {
                         console.log('tag updateErr', tagUpdateErr)                        
                         res.status(401).send(tagUpdateErr2)
                       } else {
-                        counter ++
-                        console.log('tagupdated final and going to emit' + counter, tagUpdated2)
+                        console.log('tagupdated final and going to emit', tagUpdated2)
                         global.io.emit('project created', 'yes created dude!!!')
                         res.status(200).send('project_creation_success')
                       }
