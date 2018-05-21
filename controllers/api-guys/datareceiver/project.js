@@ -61,8 +61,9 @@ exports.createProject = (req, res) => {
                         } else {
                           console.log('tag updated', tagUpdated)
                           let notification = {
-                            text: student2.email + 'posted a project',
-                            link: saved._id
+                            text: student2.email + ' posted a project',
+                            link: saved._id,
+                            type: 'project'
                           }
                           async.map(tagUpdated.students, (studentToBeNotified, callback2) => {
                             console.log('student to be notified', studentToBeNotified)
