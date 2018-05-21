@@ -59,7 +59,27 @@ exports.createCompanyProject = (req, res) => {
                         console.log('tag updateErr', tagUpdateErr)                                                  
                         } else {
                           console.log('tag updated', tagUpdated)
-                          callback()
+                          let notification = {
+                            text: company2.email + ' posted a new project',
+                            link: saved._id,
+                            type: 'companyproject',
+                            read: false
+                          }
+                          async.map(tagUpdated.students, (studentToBeNotified, callback2) => {
+                            console.log('student to be notified', studentToBeNotified)
+                            Student.findByIdAndUpdate(studentToBeNotified, {$push: {notifications: notification}}, (pushErr, pushed) => {
+                              if (pushErr) {
+                                console.log('could not push the notification')
+                              } else {
+                                console.log('notification pushed', pushed)
+                              }
+                            })
+                          }, (studentUpdateErr, studentUpdated) => {
+                            if (studentUpdateErr) {
+                              console.log('student update err', studentUpdateErr)
+                            }
+                            callback()
+                          })
                         }
                       })
                     }, (tagUpdateErr2, tagUpdated2) => {
