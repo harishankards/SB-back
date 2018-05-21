@@ -308,6 +308,8 @@ app.put('/students/update', authenticatorController.verifyToken, studentDataRece
 
 app.get('/companies/get', authenticatorController.verifyToken, companyDataProviderController.getCompany);
 app.delete('/companies/delete', authenticatorController.verifyToken, companyDataReceiverController.deleteCompany);
+app.put('/companies/update', authenticatorController.verifyToken, companyDataReceiverController.updateCompany);
+
 
 // Projects
 app.get('/projects/all', authenticatorController.verifyToken, projectDataProviderController.getAllProjects);

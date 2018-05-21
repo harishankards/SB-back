@@ -125,3 +125,29 @@ exports.postSignup = (req, res, next) => {
       });
     })(req, res, next); 
   }
+
+  exports.updateCompany = (req, res) => {
+    console.log('inside company updation',req.body)
+    jwt.verify(req.token, 'secret', {expiresIn: '10h'}, (authErr, authData) => {
+      if(authErr) {
+        console.log('autherr', authErr)
+        res.sendStatus(403);
+      } else if (authData === null) {
+        console.log('company not updated')
+        res.sendStatus(403);
+      } else {
+        const companyId = req.body._id;
+        
+        Company.findByIdAndUpdate(companyId, req.body, (err, updated) => {
+          if(err) {
+            console.log('err in updating the company', err)
+            res.status(401).send(err)
+          }
+          else {
+            console.log('company updated', updated)        
+            res.status(200).send('company_updated')    
+          }
+        }) 
+      }
+      })
+  }
