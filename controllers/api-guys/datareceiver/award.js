@@ -74,7 +74,7 @@ exports.createAward = (req, res) => {
                                 console.log('tag updateErr', tagUpdateErr)                                                  
                                 } else {
                                   console.log('tag updated', tagUpdated)
-                                  callback()
+                                  callback()                                                                        
                                 }
                               })
                             }, (tagUpdateErr2, tagUpdated2) => {
@@ -83,6 +83,19 @@ exports.createAward = (req, res) => {
                                 res.status(401).send(tagUpdateErr2)
                               } else {
                                 console.log('tagupdated final and going to emit', tagUpdated2)
+                                let notification = {
+                                  text: company2.email + ' have given you a new award',
+                                  link: saved._id,
+                                  type: 'award',
+                                  read: false
+                                }
+                                Student.findByIdAndUpdate(saved.receiver, {$push: {notifications: notification}}, (pushErr, pushed) => {
+                                  if (pushErr) {
+                                    console.log('could not push the notification')
+                                  } else {
+                                    console.log('notification pushed', pushed)
+                                  }
+                                })
                                 global.io.emit('award created', 'yes created dude!!!')
                                 res.status(200).send('award_creation_success') 
                               }
