@@ -101,8 +101,8 @@ exports.signedUrlPut = (req, res) => {
       postEndPoint: "\/\/student-burger.s3.amazonaws.com\/images"
     })
     console.log('signedObj', signedObj)    
-    
-    res.send(signedObj)
+    var signedObj2 = {"signature":{"Content-Type":"","acl":"public-read-write","success_action_status":"201","policy":"eyJleHBpcmF0aW9uIjoiMjAxOC0wNS0yMlQxODozMjo0NVoiLCJjb25kaXRpb25zIjpbeyJidWNrZXQiOiJteXZpem8tZGItYmFja3VwIn0seyJhY2wiOiJwdWJsaWMtcmVhZC13cml0ZSJ9LFsic3RhcnRzLXdpdGgiLCIka2V5IiwiIl0sWyJzdGFydHMtd2l0aCIsIiRDb250ZW50LVR5cGUiLCIiXSxbImNvbnRlbnQtbGVuZ3RoLXJhbmdlIiwwLDUyNDI4ODAwMF0seyJzdWNjZXNzX2FjdGlvbl9zdGF0dXMiOiIyMDEifSx7IngtYW16LWNyZWRlbnRpYWwiOiJBS0lBSU0zUjRFRDNQTEFMT1lEUVwvMjAxODA1MjJcL2FwLXNvdXRoLTFcL3MzXC9hd3M0X3JlcXVlc3QifSx7IngtYW16LWFsZ29yaXRobSI6IkFXUzQtSE1BQy1TSEEyNTYifSx7IngtYW16LWRhdGUiOiIyMDE4MDUyMlQxMjMyNDVaIn1dfQ==","X-amz-credential":"AKIAIM3R4ED3PLALOYDQ\/20180522\/ap-south-1\/s3\/aws4_request","X-amz-algorithm":"AWS4-HMAC-SHA256","X-amz-date":"20180522T123245Z","X-amz-signature":"a3494ba08c600b79ae359f170a9137e0dfc3c6f67abcb83ee13a1e18b06d20ad","key":"${filename}"},"postEndpoint":"\/\/s3-ap-south-1.amazonaws.com\/myvizo-db-backup"}
+    res.send(signedObj2)
   })
 }
 
