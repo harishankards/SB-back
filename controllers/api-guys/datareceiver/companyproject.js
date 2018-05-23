@@ -348,3 +348,42 @@ exports.applyProject = (req, res) => {
     }
   })
 }
+
+exports.unapplyProject = (req, res) => {
+  console.log('inside the unapply project function', req.body)
+  jwt.verify(req.token, 'secret', {expiresIn: '10h'}, (authErr, authData) => {
+    if(authErr) {
+      console.log('autherr', authErr)
+      res.sendStatus(403);
+    } else {
+        const studentId = req.body.student,
+              projectId = req.body.project;
+        CompanyProject.findById(projectId, (err, project) => {
+          if(err) {
+            console.log('could not find the project', err)
+            res.status(404).send(err)
+          }
+          else {
+            console.log('found the project', project)
+            if(project.appliedStudents.indexOf(studentId) > -1){
+              console.log('yes student is there')
+              CompanyProject.findByIdAndUpdate(projectId, {$pull: {appliedStudents: studentId}}, (removeErr, removed) => {
+                if(removeErr) {
+                  console.log('could not unapply', removeErr)
+                  res.status(413).send(removeErr)
+                }
+                else{
+                  console.log('unapplied the student', removed)
+                  res.status(200).send('removed upvote')            
+                }
+              })
+            }
+            else {
+              console.log('student not applied')
+              res.status(404).send('student not applied')
+            }
+          }
+        })
+    }
+  })
+}
