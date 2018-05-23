@@ -154,7 +154,28 @@ exports.addUpvotes = (req, res) => {
               }
               else {
                 console.log('project upvoted', upvoted)
-                res.status(200).send('upvoted')
+                Student.findById(studentId, (upvotedStudentErr, upvotedStudent) => {
+                  if (upvotedStudentErr) {
+                    console.log('upvoted Student Err', upvotedStudentErr)
+                    res.status(404).send(err)                    
+                  } else {
+                    console.log('upvoted student', upvotedStudent)
+                    let notification = {
+                      text: upvotedStudent.email + ' upvoted your project',
+                      link: projectId,
+                      type: 'companyproject',
+                      read: false
+                    }
+                    Company.findByIdAndUpdate(upvoted.author, {$push: {notifications: notification}}, (pushErr, pushed) => {
+                      if (pushErr) {
+                        console.log('could not push the notification')
+                      } else {
+                        console.log('notification pushed', pushed)
+                        res.status(200).send('upvoted')                          
+                      }
+                    })
+                  }
+                })
               }
             })
           }
