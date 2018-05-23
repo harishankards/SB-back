@@ -66,14 +66,18 @@ exports.createProject = (req, res) => {
                             read: false
                           }
                           async.map(tagUpdated.students, (studentToBeNotified, callback2) => {
-                            console.log('student to be notified', studentToBeNotified)
-                            Student.findByIdAndUpdate(studentToBeNotified, {$push: {notifications: notification}}, (pushErr, pushed) => {
-                              if (pushErr) {
-                                console.log('could not push the notification')
-                              } else {
-                                console.log('notification pushed', pushed)
-                              }
-                            })
+                            if (studentToBeNotified.toString() == saved.author.toString()) {
+                              console.log('same student')
+                            } else {
+                              console.log('different student')
+                              Student.findByIdAndUpdate(studentToBeNotified, {$push: {notifications: notification}}, (pushErr, pushed) => {
+                                if (pushErr) {
+                                  console.log('could not push the notification')
+                                } else {
+                                  console.log('notification pushed', pushed)
+                                }
+                              })
+                            }
                           }, (studentUpdateErr, studentUpdated) => {
                             if (studentUpdateErr) {
                               console.log('student update err', studentUpdateErr)
