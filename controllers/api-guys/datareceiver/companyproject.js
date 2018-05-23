@@ -324,6 +324,13 @@ exports.applyProject = (req, res) => {
                     res.status(404).send(err)                    
                   } else {
                     console.log('applied student', appliedStudent)
+                    Student.findByIdAndUpdate(studentId, {$push: {appliedCompanyProjects: applied._id}}, (updateStudentErr, updateStudent) => {
+                      if (updateStudentErr) {
+                        console.log('could not update student', updateStudentErr)
+                      } else {
+                        console.log('student updated', updateStudent)
+                      }
+                    })
                     let notification = {
                       text: appliedStudent.email + ' applied to do your project',
                       link: projectId,
