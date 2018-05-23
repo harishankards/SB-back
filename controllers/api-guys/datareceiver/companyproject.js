@@ -288,3 +288,63 @@ exports.deleteCompanyProject = (req, res) => {
     }
   })
 }
+
+
+exports.applyProject = (req, res) => {
+  console.log('inside apply project', req.body)
+  jwt.verify(req.token, 'secret', {expiresIn: '10h'}, (authErr, authData) => {
+    if(authErr) {
+      console.log('autherr', authErr)
+      res.sendStatus(403);
+    } else {
+      const studentId = req.body.student,
+      projectId = req.body.project;
+      CompanyProject.findById(projectId, (err, project) => {
+        if(err) {
+          console.log('could noot find the project', err)
+          res.status(404).send(err)
+        }
+        else {
+          console.log('found the project', project)
+          if (project.appliedStudents.indexOf(studentId) > -1) {
+            console.log('already applied')
+            res.status(404).send('already applied')            
+          }
+          else {
+            CompanyProject.findByIdAndUpdate(projectId, {$push: {appliedStudents: studentId}}, (applyErr, applied) => {
+              if(applyErr) {
+                console.log('could not apply', applyErr)
+                res.status(413).send(applyErr)
+              }
+              else {
+                console.log('project applied', applied)
+                Student.findById(studentId, (appliedStudentErr, appliedStudent) => {
+                  if (appliedStudentErr) {
+                    console.log('applied Student Err', appliedStudentErr)
+                    res.status(404).send(err)                    
+                  } else {
+                    console.log('applied student', appliedStudent)
+                    let notification = {
+                      text: appliedStudent.email + ' applied to do your project',
+                      link: projectId,
+                      type: 'companyproject',
+                      read: false
+                    }
+                    Company.findByIdAndUpdate(applied.author, {$push: {notifications: notification}}, (pushErr, pushed) => {
+                      if (pushErr) {
+                        console.log('could not push the notification')
+                      } else {
+                        console.log('notification pushed', pushed)
+                        res.status(200).send('applied')                          
+                      }
+                    })
+                  }
+                })
+              }
+            })
+          }
+        }
+      })
+    }
+  })
+}
