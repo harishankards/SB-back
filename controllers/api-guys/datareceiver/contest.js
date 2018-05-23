@@ -168,7 +168,20 @@ exports.addRegistrations = (req, res) => {
                       res.status(403).send(studentUpdateErr)                      
                     } else {
                       console.log('studen updated')
-                      res.status(200).send(contestUpdated)
+                      let notification = {
+                        text: studentUpdated.email + ' registered for your contest',
+                        link: contestId,
+                        type: 'contest',
+                        read: false
+                      }
+                      Company.findByIdAndUpdate(contestUpdated.host, {$push: {notifications: notification}}, (pushErr, pushed) => {
+                        if (pushErr) {
+                          console.log('could not push the notification')
+                        } else {
+                          console.log('notification pushed', pushed)
+                          res.status(200).send(contestUpdated)                          
+                        }
+                      })
                     }
                   })
                 }
