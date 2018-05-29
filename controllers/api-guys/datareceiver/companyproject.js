@@ -134,7 +134,7 @@ exports.addUpvotes = (req, res) => {
       res.sendStatus(403);
     } else {
       const studentId = req.body.student,
-      projectId = req.body.project;
+            projectId = req.body.project;
       CompanyProject.findById(projectId, (err, project) => {
         if(err) {
           console.log('could noot find the project', err)
