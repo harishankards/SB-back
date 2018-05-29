@@ -328,6 +328,7 @@ app.post('/companyprojects', authenticatorController.verifyToken, companyProject
 app.put('/companyprojects', authenticatorController.verifyToken, companyProjectDataReceiverController.updateCompanyProject);
 app.delete('/companyprojects', authenticatorController.verifyToken, companyProjectDataReceiverController.deleteCompanyProject);
 app.post('/companyprojects/upvotes', authenticatorController.verifyToken, companyProjectDataReceiverController.addUpvotes);
+app.post('/companyprojects/upvotes/remove', authenticatorController.verifyToken, companyProjectDataReceiverController.removeUpvotes);
 
 
 // Contests
