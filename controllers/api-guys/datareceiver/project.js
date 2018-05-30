@@ -172,6 +172,7 @@ exports.addUpvotes = (req, res) => {
                     }
                     if (studentId.toString() == upvoted.author.toString()) {
                       console.log('same student')
+                      res.status(200).send('upvoted')                                                
                     } else {
                       console.log('different student')
                       Student.findByIdAndUpdate(upvoted.author, {$push: {notifications: notification}}, (pushErr, pushed) => {
