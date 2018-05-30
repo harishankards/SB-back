@@ -21,10 +21,22 @@ const studentSchema = new Schema({
 
   profile: {
     name: String,
+    fname: String,
+    lname: String,
+    dob: Date,
+    uname: String,
     gender: String,
-    location: String,
+    city: String,
+    country: String,
     website: String,
     picture: String
+  },
+
+  academic: {
+    collegeName: String,
+    degree: String,
+    branch: String,
+    yearofstudy: String
   },
   notifications: Array,
   awards: [{ type: Schema.Types.ObjectId, ref: 'awards' }],  
