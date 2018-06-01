@@ -16,8 +16,12 @@ const companySchema = new Schema({
   tokens: Array,
 
   profile: {
-    name: String,
-    location: String,
+    fname: String,
+    uname: String,
+    about: String,
+    city: String,
+    country: String,
+    zip: Number,
     website: String,
     logo: String
   },
