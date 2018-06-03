@@ -20,8 +20,6 @@ tmp
 public/css/main.css
 .nyc_output/*
 
-# API keys and secrets
-.env
 
 # Dependency directory
 node_modules
