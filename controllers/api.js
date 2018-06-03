@@ -7,23 +7,13 @@ const tumblr = require('tumblr.js');
 const GitHub = require('@octokit/rest');
 const Twit = require('twit');
 const stripe = require('stripe')(process.env.STRIPE_SKEY);
-const twilio = require('twilio')(process.env.TWILIO_SID, process.env.TWILIO_TOKEN);
+// const twilio = require('twilio')(process.env.TWILIO_SID, process.env.TWILIO_TOKEN);
 const Linkedin = require('node-linkedin')(process.env.LINKEDIN_ID, process.env.LINKEDIN_SECRET, process.env.LINKEDIN_CALLBACK_URL);
-const clockwork = require('clockwork')({ key: process.env.CLOCKWORK_KEY });
+// const clockwork = require('clockwork')({ key: process.env.CLOCKWORK_KEY });
 const paypal = require('paypal-rest-sdk');
 const lob = require('lob')(process.env.LOB_KEY);
 const ig = require('instagram-node').instagram();
-const { Venues, Users } = require('node-foursquare')({
-  secrets: {
-    clientId: process.env.FOURSQUARE_ID,
-    clientSecret: process.env.FOURSQUARE_SECRET,
-    redirectUrl: process.env.FOURSQUARE_REDIRECT_URL
-  },
-  foursquare: {
-    mode: 'foursquare',
-    version: 20140806,
-  }
-});
+
 
 /**
  * GET /api
@@ -35,51 +25,6 @@ exports.getApi = (req, res) => {
   });
 };
 
-/**
- * GET /api/foursquare
- * Foursquare API example.
- */
-exports.getFoursquare = async (req, res, next) => {
-  const token = req.user.tokens.find(token => token.kind === 'foursquare');
-  try {
-    const getTrendingAsync = util.promisify(Venues.getTrending);
-    const getVenueAsync = util.promisify(Venues.getVenue);
-    const getCheckinsAsync = util.promisify(Users.getCheckins);
-    const trendingVenues = await getTrendingAsync('40.7222756', '-74.0022724', { limit: 50 }, token.accessToken);
-    const venueDetail = await getVenueAsync('49da74aef964a5208b5e1fe3', token.accessToken);
-    const userCheckins = await getCheckinsAsync('self', null, token.accessToken);
-    return res.render('api/foursquare', {
-      title: 'Foursquare API',
-      trendingVenues,
-      venueDetail,
-      userCheckins
-    });
-  } catch (err) {
-    return next(err);
-  }
-};
-
-/**
- * GET /api/tumblr
- * Tumblr API example.
- */
-exports.getTumblr = (req, res, next) => {
-  const token = req.user.tokens.find(token => token.kind === 'tumblr');
-  const client = tumblr.createClient({
-    consumer_key: process.env.TUMBLR_KEY,
-    consumer_secret: process.env.TUMBLR_SECRET,
-    token: token.accessToken,
-    token_secret: token.tokenSecret
-  });
-  client.posts('mmosdotcom.tumblr.com', { type: 'photo' }, (err, data) => {
-    if (err) { return next(err); }
-    res.render('api/tumblr', {
-      title: 'Tumblr API',
-      blog: data.blog,
-      photoset: data.posts[0].photos
-    });
-  });
-};
 
 /**
  * GET /api/facebook
@@ -131,103 +76,6 @@ exports.getGithub = (req, res, next) => {
   });
 };
 
-/**
- * GET /api/aviary
- * Aviary image processing example.
- */
-exports.getAviary = (req, res) => {
-  res.render('api/aviary', {
-    title: 'Aviary API'
-  });
-};
-
-/**
- * GET /api/nyt
- * New York Times API example.
- */
-exports.getNewYorkTimes = (req, res, next) => {
-  const query = {
-    'list-name': 'young-adult',
-    'api-key': process.env.NYT_KEY
-  };
-  request.get({ url: 'http://api.nytimes.com/svc/books/v2/lists', qs: query }, (err, request, body) => {
-    if (err) { return next(err); }
-    if (request.statusCode === 403) {
-      return next(new Error('Invalid New York Times API Key'));
-    }
-    const books = JSON.parse(body).results;
-    res.render('api/nyt', {
-      title: 'New York Times API',
-      books
-    });
-  });
-};
-
-/**
- * GET /api/lastfm
- * Last.fm API example.
- */
-exports.getLastfm = async (req, res, next) => {
-  const lastfm = new LastFmNode({
-    api_key: process.env.LASTFM_KEY,
-    secret: process.env.LASTFM_SECRET
-  });
-  const getArtistInfo = () =>
-    new Promise((resolve, reject) => {
-      lastfm.request('artist.getInfo', {
-        artist: 'Roniit',
-        handlers: {
-          success: resolve,
-          error: reject
-        }
-      });
-    });
-  const getArtistTopTracks = () =>
-    new Promise((resolve, reject) => {
-      lastfm.request('artist.getTopTracks', {
-        artist: 'Roniit',
-        handlers: {
-          success: ({ toptracks }) => {
-            resolve(toptracks.track.slice(0, 10));
-          },
-          error: reject
-        }
-      });
-    });
-  const getArtistTopAlbums = () =>
-    new Promise((resolve, reject) => {
-      lastfm.request('artist.getTopAlbums', {
-        artist: 'Roniit',
-        handlers: {
-          success: ({ topalbums }) => {
-            resolve(topalbums.album.slice(0, 3));
-          },
-          error: reject
-        }
-      });
-    });
-  try {
-    const { artist: artistInfo } = await getArtistInfo();
-    const topTracks = await getArtistTopTracks();
-    const topAlbums = await getArtistTopAlbums();
-    const artist = {
-      name: artistInfo.name,
-      image: artistInfo.image ? artistInfo.image.slice(-1)[0]['#text'] : null,
-      tags: artistInfo.tags ? artistInfo.tags.tag : [],
-      bio: artistInfo.bio ? artistInfo.bio.summary : '',
-      stats: artistInfo.stats,
-      similar: artistInfo.similar ? artistInfo.similar.artist : [],
-      topTracks,
-      topAlbums
-    };
-    return res.render('api/lastfm', {
-      title: 'Last.fm API',
-      artist
-    });
-  } catch (err) {
-    return next(err);
-  }
-};
 
 /**
  * GET /api/twitter
