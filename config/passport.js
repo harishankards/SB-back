@@ -81,7 +81,7 @@ passport.use('student-local', new LocalStrategy({ usernameField: 'email' }, (ema
 passport.use(new FacebookStrategy({
   clientID: process.env.FACEBOOK_ID,
   clientSecret: process.env.FACEBOOK_SECRET,
-  callbackURL: 'https://574cc5bd.ngrok.io/auth/facebook/callback',
+  callbackURL: 'https://79741908.ngrok.io/auth/facebook/callback',
   profileFields: ['name', 'email', 'link', 'locale', 'timezone', 'gender'],
   passReqToCallback: true
 }, (req, accessToken, refreshToken, profile, done) => {
