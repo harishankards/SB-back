@@ -308,10 +308,10 @@ passport.use(new GoogleStrategy({
 /**
  * Sign in with LinkedIn.
  */
-passport.use(student-linkedin, new LinkedInStrategy({
+passport.use('student-linkedin', new LinkedInStrategy({
   clientID: process.env.LINKEDIN_ID,
   clientSecret: process.env.LINKEDIN_SECRET,
-  callbackURL: process.env.LINKEDIN_CALLBACK_URL,
+  callbackURL: process.env.LINKEDIN_CALLBACK_URL_STUDENT,
   scope: ['r_basicprofile', 'r_emailaddress'],
   passReqToCallback: true
 }, (req, accessToken, refreshToken, profile, done) => {
@@ -367,7 +367,7 @@ passport.use(student-linkedin, new LinkedInStrategy({
   }
 }));
 
-passport.use(company-linkedin, new LinkedInStrategy({
+passport.use('company-linkedin', new LinkedInStrategy({
   clientID: process.env.LINKEDIN_ID,
   clientSecret: process.env.LINKEDIN_SECRET,
   callbackURL: process.env.LINKEDIN_CALLBACK_URL,
