@@ -234,8 +234,12 @@ app.get('/auth/instagram', passport.authenticate('instagram'));
 app.get('/auth/instagram/callback', passport.authenticate('instagram', { failureRedirect: '/login' }), (req, res) => {
   res.redirect(req.session.returnTo || '/');
 });
-app.get('/auth/facebook', passport.authenticate('facebook', { scope: ['email', 'public_profile'] }));
-app.get('/auth/facebook/callback', passport.authenticate('facebook', { failureRedirect: '/login' }), (req, res) => {
+app.get('/auth/facebook', passport.authenticate('facebook-student', { scope: ['email', 'public_profile'] }));
+app.get('/auth/facebook/callback', passport.authenticate('facebook-student', { failureRedirect: '/login' }), (req, res) => {
+  res.redirect(req.session.returnTo || '/');
+});
+app.get('/auth/facebook/company', passport.authenticate('facebook-company', { scope: ['email', 'public_profile'] }));
+app.get('/auth/facebook/company/callback', passport.authenticate('facebook-company', { failureRedirect: '/login' }), (req, res) => {
   res.redirect(req.session.returnTo || '/');
 });
 app.get('/auth/github', passport.authenticate('github'));
@@ -252,6 +256,11 @@ app.get('/auth/twitter/callback', passport.authenticate('twitter', { failureRedi
 });
 app.get('/auth/linkedin/student', passport.authenticate('student-linkedin', { state: 'SOME STATE' }));
 app.get('/auth/linkedin/student/callback', passport.authenticate('student-linkedin', { failureRedirect: '/auth/student/login' }), (req, res) => {
+  res.redirect(req.session.returnTo || '/');
+});
+
+app.get('/auth/linkedin/company', passport.authenticate('company-linkedin', { state: 'SOME STATE' }));
+app.get('/auth/linkedin/company/callback', passport.authenticate('company-linkedin', { failureRedirect: '/auth/student/login' }), (req, res) => {
   res.redirect(req.session.returnTo || '/');
 });
 
