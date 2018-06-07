@@ -372,15 +372,21 @@ passport.use('student-linkedin', new LinkedInStrategy({
   scope: ['r_basicprofile', 'r_emailaddress'],
   passReqToCallback: true
 }, (req, accessToken, refreshToken, profile, done) => {
+  console.log('inside student linkedin')
   if (req.user) {
+    console.log('user is there', req.user)
     Student.findOne({ linkedin: profile.id }, (err, existingUser) => {
       if (err) { return done(err); }
       if (existingUser) {
+        console.log('finding student from user is there function', existingUser)
         req.flash('errors', { msg: 'There is already a LinkedIn account that belongs to you. Sign in with that account or delete it, then link it with your current account.' });
         done(err);
       } else {
+        console.log('inside else of user is there', req.user.id)
         Student.findById(req.user.id, (err, user) => {
           if (err) { return done(err); }
+          console.log('student found', user)
+          console.log('student profile id', profile.id)
           user.linkedin = profile.id;
           user.tokens.push({ kind: 'linkedin', accessToken });
           user.profile.name = user.profile.name || profile.displayName;
@@ -388,7 +394,10 @@ passport.use('student-linkedin', new LinkedInStrategy({
           user.profile.picture = user.profile.picture || profile._json.pictureUrl;
           user.profile.website = user.profile.website || profile._json.publicProfileUrl;
           user.save((err) => {
-            if (err) { return done(err); }
+            if (err) { 
+              console.log('inside user saving err function', err)
+              return done(err); 
+            }
             req.flash('info', { msg: 'LinkedIn account has been linked.' });
             done(err, user);
           });
@@ -396,11 +405,13 @@ passport.use('student-linkedin', new LinkedInStrategy({
       }
     });
   } else {
+    console.log('user is not there')
     Student.findOne({ linkedin: profile.id }, (err, existingUser) => {
       if (err) { return done(err); }
       if (existingUser) {
         return done(null, existingUser);
       }
+      console.log('student is not there')
       Student.findOne({ email: profile._json.emailAddress }, (err, existingEmailUser) => {
         if (err) { return done(err); }
         if (existingEmailUser) {
