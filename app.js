@@ -234,8 +234,8 @@ app.get('/auth/instagram', passport.authenticate('instagram'));
 app.get('/auth/instagram/callback', passport.authenticate('instagram', { failureRedirect: '/login' }), (req, res) => {
   res.redirect(req.session.returnTo || '/');
 });
-app.get('/auth/facebook', passport.authenticate('facebook-student', { scope: ['email', 'public_profile'] }));
-app.get('/auth/facebook/callback', passport.authenticate('facebook-student', { failureRedirect: '/login' }), (req, res) => {
+app.get('/auth/facebook/student', passport.authenticate('facebook-student', { scope: ['email', 'public_profile'] }));
+app.get('/auth/facebook/student/callback', passport.authenticate('facebook-student', { failureRedirect: '/login' }), (req, res) => {
   res.redirect(req.session.returnTo || '/');
 });
 app.get('/auth/facebook/company', passport.authenticate('facebook-company', { scope: ['email', 'public_profile'] }));
