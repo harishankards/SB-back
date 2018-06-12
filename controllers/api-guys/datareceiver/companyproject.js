@@ -63,6 +63,7 @@ exports.createCompanyProject = (req, res) => {
                             text: company2.email + ' posted a new project',
                             link: saved._id,
                             type: 'companyproject',
+                            title: saved.title,
                             read: false
                           }
                           async.map(tagUpdated.students, (studentToBeNotified, callback2) => {

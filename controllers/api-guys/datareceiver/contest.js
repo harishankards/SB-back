@@ -63,6 +63,7 @@ exports.createContest = (req, res) => {
                               text: company2.email + ' posted a contest',
                               link: saved._id,
                               type: 'contest',
+                              title: saved.title,
                               read: false
                             }
                             async.map(tagUpdated.students, (studentToBeNotified, callback2) => {

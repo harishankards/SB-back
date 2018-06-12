@@ -63,6 +63,7 @@ exports.createProject = (req, res) => {
                             text: student2.email + ' posted a project',
                             link: saved._id,
                             type: 'project',
+                            title: saved.title,
                             read: false
                           }
                           async.map(tagUpdated.students, (studentToBeNotified, callback2) => {
