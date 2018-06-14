@@ -53,6 +53,7 @@ exports.createProject = (req, res) => {
                   }
                   else {
                     console.log('student updated', student2)
+                    let notifiedStudents = [];
                     async.map(saved.tags, (tag, callback) => {
                       Tag.findByIdAndUpdate(tag.id, {$push: {projects: saved._id}}, (tagUpdateErr, tagUpdated) => {
                         if (tagUpdateErr) {
@@ -71,13 +72,19 @@ exports.createProject = (req, res) => {
                               console.log('same student')
                             } else {
                               console.log('different student')
-                              Student.findByIdAndUpdate(studentToBeNotified, {$push: {notifications: notification}}, (pushErr, pushed) => {
-                                if (pushErr) {
-                                  console.log('could not push the notification')
-                                } else {
-                                  console.log('notification pushed', pushed)
-                                }
-                              })
+                              if (notifiedStudents.includes(studentToBeNotified)) {
+                                console.log('already notified')
+                              } else {
+                                console.log('going to notify')
+                                notifiedStudents.push(studentToBeNotified)
+                                Student.findByIdAndUpdate(studentToBeNotified, {$push: {notifications: notification}}, (pushErr, pushed) => {
+                                  if (pushErr) {
+                                    console.log('could not push the notification')
+                                  } else {
+                                    console.log('notification pushed', pushed)
+                                  }
+                                })
+                              }
                             }
                           }, (studentUpdateErr, studentUpdated) => {
                             if (studentUpdateErr) {
