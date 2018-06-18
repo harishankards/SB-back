@@ -12,7 +12,7 @@ const { OAuthStrategy } = require('passport-oauth');
 const { OAuth2Strategy } = require('passport-oauth');
 
 const User = require('../models/User');
-const Student = require ('../models/Student');
+const Student = require('../models/Student');
 const Company = require('../models/Company');
 
 passport.serializeUser((user, done) => {
@@ -118,7 +118,7 @@ passport.use('facebook-student', new FacebookStrategy({
           req.flash('errors', { msg: 'There is already an account using this email address. Sign in to that account and link it with Facebook manually from Account Settings.' });
           done(err);
         } else {
-          const user = new User();
+          const user = new Student();
           user.email = profile._json.email;
           user.facebook = profile.id;
           user.tokens.push({ kind: 'facebook', accessToken });
@@ -175,7 +175,7 @@ passport.use('facebook-company', new FacebookStrategy({
           req.flash('errors', { msg: 'There is already an account using this email address. Sign in to that account and link it with Facebook manually from Account Settings.' });
           done(err);
         } else {
-          const user = new User();
+          const user = new Student();
           user.email = profile._json.email;
           user.facebook = profile.id;
           user.tokens.push({ kind: 'facebook', accessToken });
@@ -372,7 +372,9 @@ passport.use('student-linkedin', new LinkedInStrategy({
   scope: ['r_basicprofile', 'r_emailaddress'],
   passReqToCallback: true
 }, (req, accessToken, refreshToken, profile, done) => {
-  console.log('inside student linkedin')
+  console.log('inside student linkedin');
+  console.log('req', req.user);
+  console.log(profile);
   if (req.user) {
     console.log('user is there', req.user)
     Student.findOne({ linkedin: profile.id }, (err, existingUser) => {
@@ -418,7 +420,8 @@ passport.use('student-linkedin', new LinkedInStrategy({
           req.flash('errors', { msg: 'There is already an account using this email address. Sign in to that account and link it with LinkedIn manually from Account Settings.' });
           done(err);
         } else {
-          const user = new User();
+          const user = new Student();
+          console.log('pro',profile);
           user.linkedin = profile.id;
           user.tokens.push({ kind: 'linkedin', accessToken });
           user.email = profile._json.emailAddress;
@@ -438,7 +441,7 @@ passport.use('student-linkedin', new LinkedInStrategy({
 passport.use('company-linkedin', new LinkedInStrategy({
   clientID: process.env.LINKEDIN_ID,
   clientSecret: process.env.LINKEDIN_SECRET,
-  callbackURL: process.env.LINKEDIN_CALLBACK_URL,
+  callbackURL: process.env.LINKEDIN_CALLBACK_URL_COMPANY,
   scope: ['r_basicprofile', 'r_emailaddress'],
   passReqToCallback: true
 }, (req, accessToken, refreshToken, profile, done) => {
@@ -477,7 +480,7 @@ passport.use('company-linkedin', new LinkedInStrategy({
           req.flash('errors', { msg: 'There is already an account using this email address. Sign in to that account and link it with LinkedIn manually from Account Settings.' });
           done(err);
         } else {
-          const user = new User();
+          const user = new Company();
           user.linkedin = profile.id;
           user.tokens.push({ kind: 'linkedin', accessToken });
           user.email = profile._json.emailAddress;
@@ -559,15 +562,15 @@ passport.use('tumblr', new OAuthStrategy({
   callbackURL: '/auth/tumblr/callback',
   passReqToCallback: true
 },
-(req, token, tokenSecret, profile, done) => {
-  User.findById(req.user._id, (err, user) => {
-    if (err) { return done(err); }
-    user.tokens.push({ kind: 'tumblr', accessToken: token, tokenSecret });
-    user.save((err) => {
-      done(err, user);
+  (req, token, tokenSecret, profile, done) => {
+    User.findById(req.user._id, (err, user) => {
+      if (err) { return done(err); }
+      user.tokens.push({ kind: 'tumblr', accessToken: token, tokenSecret });
+      user.save((err) => {
+        done(err, user);
+      });
     });
-  });
-}));
+  }));
 
 /**
  * Foursquare API OAuth.
@@ -580,15 +583,15 @@ passport.use('foursquare', new OAuth2Strategy({
   callbackURL: process.env.FOURSQUARE_REDIRECT_URL,
   passReqToCallback: true
 },
-(req, accessToken, refreshToken, profile, done) => {
-  User.findById(req.user._id, (err, user) => {
-    if (err) { return done(err); }
-    user.tokens.push({ kind: 'foursquare', accessToken });
-    user.save((err) => {
-      done(err, user);
+  (req, accessToken, refreshToken, profile, done) => {
+    User.findById(req.user._id, (err, user) => {
+      if (err) { return done(err); }
+      user.tokens.push({ kind: 'foursquare', accessToken });
+      user.save((err) => {
+        done(err, user);
+      });
     });
-  });
-}));
+  }));
 
 /**
  * Steam API OpenID.
@@ -665,15 +668,15 @@ passport.use('pinterest', new OAuth2Strategy({
   callbackURL: process.env.PINTEREST_REDIRECT_URL,
   passReqToCallback: true
 },
-(req, accessToken, refreshToken, profile, done) => {
-  User.findById(req.user._id, (err, user) => {
-    if (err) { return done(err); }
-    user.tokens.push({ kind: 'pinterest', accessToken });
-    user.save((err) => {
-      done(err, user);
+  (req, accessToken, refreshToken, profile, done) => {
+    User.findById(req.user._id, (err, user) => {
+      if (err) { return done(err); }
+      user.tokens.push({ kind: 'pinterest', accessToken });
+      user.save((err) => {
+        done(err, user);
+      });
     });
-  });
-}));
+  }));
 
 /**
  * Login Required middleware.
@@ -691,7 +694,7 @@ exports.isAuthenticated = (req, res, next) => {
  */
 exports.isAuthorized = (req, res, next) => {
   console.log('inside isAuthorized', req.body)
-  
+
   const provider = req.path.split('/').slice(-1)[0];
   const token = req.user.tokens.find(token => token.kind === provider);
   if (token) {
