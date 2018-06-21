@@ -15,6 +15,10 @@ const companySchema = new Schema({
   steam: String,
   tokens: Array,
 
+  plan: {
+    type: String,
+    projectViewed: Number
+  },
   profile: {
     fname: String,
     uname: String,
