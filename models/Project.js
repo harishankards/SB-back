@@ -10,6 +10,8 @@ description : String,
 upvotes : [{ type: Schema.Types.ObjectId, ref: 'Student' }],
 tags: Array,
 files: Array,
+studentsViewed: [{ type: Schema.Types.ObjectId, ref: 'Student' }],
+companiesViewed: [{ type: Schema.Types.ObjectId, ref: 'Company' }],
 },{ timestamps: true })
 
 
