@@ -306,3 +306,49 @@ exports.deleteProject = (req, res) => {
     }
   })
 }
+
+exports.addStudentViews = (req, res) => {
+  console.log('inside adding student views', req.body)
+  jwt.verify(req.token, 'secret', {expiresIn: '10h'}, (authErr, authData) => {
+    if(authErr) {
+      console.log('autherr', authErr)
+      res.sendStatus(403);
+    } else {
+      const studentId = req.body.student,
+            projectId = req.body.project;
+      Project.findById(projectId, (err, project) => {
+        if(err) {
+          console.log('could noot find the project', err)
+          res.status(404).send(err)
+        }
+        else {
+          console.log('found the project', project)
+          if (project.studentsViewed.indexOf(studentId) > -1) {
+            console.log('already viewed')
+            res.status(304).send('already viewed')            
+          }
+          else {
+            Project.findByIdAndUpdate(projectId, {$push: {studentsViewed: studentId}}, (viewErr, viewed) => {
+              if(viewErr) {
+                console.log('could not add view', viewErr)
+                res.status(413).send(viewErr)
+              }
+              else {
+                console.log('project viewed', viewed)
+                Student.findById(studentId, (viewedStudentErr, viewedStudent) => {
+                  if (viewedStudentErr) {
+                    console.log('viewed Student Err', viewedStudentErr)
+                    res.status(404).send(err)                    
+                  } else {
+                    console.log('viewed student', viewedStudent)
+                    res.status(200).send('student_view_added')                                                                    
+                  }
+                })                
+              }
+            })
+          }
+        }
+      })
+    }
+  })
+}
