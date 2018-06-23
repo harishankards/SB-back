@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const Project = require('../../../models/Project');
 const Student = require('../../../models/Student');
+const Company = require('../../../models/Company');
 const Tag = require('../../../models/Tag');
 const jwt = require('jsonwebtoken');
 const async = require('async');
@@ -342,6 +343,52 @@ exports.addStudentViews = (req, res) => {
                   } else {
                     console.log('viewed student', viewedStudent)
                     res.status(200).send('student_view_added')                                                                    
+                  }
+                })                
+              }
+            })
+          }
+        }
+      })
+    }
+  })
+}
+
+exports.addCompanyViews = (req, res) => {
+  console.log('inside adding company views', req.body)
+  jwt.verify(req.token, 'secret', {expiresIn: '10h'}, (authErr, authData) => {
+    if(authErr) {
+      console.log('autherr', authErr)
+      res.sendStatus(403);
+    } else {
+      const companyId = req.body.company,
+            projectId = req.body.project;
+      Project.findById(projectId, (err, project) => {
+        if(err) {
+          console.log('could noot find the project', err)
+          res.status(404).send(err)
+        }
+        else {
+          console.log('found the project', project)
+          if (project.companiesViewed.indexOf(companyId) > -1) {
+            console.log('already viewed')
+            res.status(304).send('already viewed')            
+          }
+          else {
+            Project.findByIdAndUpdate(projectId, {$push: {companiesViewed: companyId}}, (viewErr, viewed) => {
+              if(viewErr) {
+                console.log('could not add view', viewErr)
+                res.status(413).send(viewErr)
+              }
+              else {
+                console.log('project viewed', viewed)
+                Company.findById(companyId, (viewedCompanyErr, viewedCompany) => {
+                  if (viewedCompanyErr) {
+                    console.log('viewed company Err', viewedCompanyErr)
+                    res.status(404).send(err)                    
+                  } else {
+                    console.log('viewed company', viewedCompany)
+                    res.status(200).send('company_view_added')                                                                    
                   }
                 })                
               }
