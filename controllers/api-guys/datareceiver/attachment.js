@@ -9,12 +9,11 @@ const awsSDK = require('aws-sdk');
 
 const serverConfig = {
   s3: {
-    bucket: 'student-burger/images',
+    bucket: 'student-burger',
     region: 'us-east-2',
     accessKeyId: 'AKIAITZKXZC3HPB7M4UA',
     secretAccessKey: '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',
     defaultExpiry: 86400,
-    VersionId : '2012-10-17'
   }
 }
 
@@ -24,19 +23,20 @@ awsSDK.config.update({
   region: serverConfig.s3.region,
   accessKeyId: serverConfig.s3.accessKeyId,
   secretAccessKey: serverConfig.s3.secretAccessKey,
-  VersionId : serverConfig.s3.Version
+  apiVersion: '2006-03-01',
 })
 
-const s3 = new awsSDK.S3()
+const s3 = new awsSDK.S3();
 
-const generateSignature = (method, file, key, expires = serverConfig.s3.defaultExpiry) => {
+const generateSignature = (method, file, key, path,expires = serverConfig.s3.defaultExpiry) => {
 
   const params = {
-    Bucket: serverConfig.s3.bucket,
+    Bucket: 'student-burger/'+path,
     Key: key,
-    Expires: expires
+    Expires: expires,
+    ACL: 'public-read-write',
   }
-
+  console.log(params);
   return new Promise((resolve, reject) => {
     s3.getSignedUrl(method, params, (error, signedUrl) => {
       if (error) {
@@ -48,7 +48,8 @@ const generateSignature = (method, file, key, expires = serverConfig.s3.defaultE
       resolve({
         method: HTTPMethod,
         key: key,
-        url: signedUrl
+        url: signedUrl,
+        path: path
       })
     })
   })
@@ -129,12 +130,14 @@ exports.createAttachment = (req, res) => {
       name: req.file.filename,
       type: req.file.mimetype
     };
+    console.log('filedata',file);
     const key = req.file.filename;
     const filepath = req.file.path;
     generateSignature(
         'putObject',
         file,
         key,
+        req.headers.path
       )
       .then((signature) => {
         console.log(signature)
@@ -144,18 +147,22 @@ exports.createAttachment = (req, res) => {
           }
           console.log('deleted the file')
         })
-        res.send(signature)
+        res.send(signature);
       })
   }
 }
 
 exports.deleteAttachment = (req, res) => {
   console.log('inside the delete attachment function');
-  const filePath = req.body.filepath[0];
+  console.log(req.body);
+  console.log(req.headers);
+  const filePath = req.body.key;
+
   var params = {
-    Bucket: 'student-burger/images', 
+    Bucket: 'student-burger'+req.headers.path,
     Key : filePath
   };
+  console.log(params);
   s3.deleteObject(params, function (err, data) {
     if (err) console.log(err, err.stack); // error
     else {
