@@ -324,6 +324,8 @@ app.post('/projects/upvotes/remove', authenticatorController.verifyToken, projec
 app.put('/projects/update', authenticatorController.verifyToken, projectDataReceiverController.updateProject)
 app.delete('/projects/delete', authenticatorController.verifyToken, projectDataReceiverController.deleteProject);
 
+app.post('/projects/addStudentView', authenticatorController.verifyToken, projectDataReceiverController.addStudentViews);
+app.post('/projects/addCompanyView', authenticatorController.verifyToken, projectDataReceiverController.addCompanyViews);
 
 // Company projects
 app.get('/companyprojects/all', authenticatorController.verifyToken, companyProjectDataProviderController.getAllProjects);
