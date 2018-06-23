@@ -119,7 +119,8 @@ exports.postSignup = (req, res, next) => {
           console.log('user logged in', company)        
           res.json({
             token: token,
-            message: 'login_success'
+            message: 'login_success',
+            id: company._id
           })
         });
       });
