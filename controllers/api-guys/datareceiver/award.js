@@ -6,6 +6,7 @@ const Company = require('../../../models/Company');
 const jwt = require('jsonwebtoken');
 const Tag = require('../../../models/Tag');
 const async = require('async');
+const awsSDK = require('aws-sdk');
 
 exports.createAward = (req, res) => {
   console.log('inside award creation',req.body)
@@ -14,13 +15,24 @@ exports.createAward = (req, res) => {
       console.log('autherr', authErr)
       res.sendStatus(406);
     } else {
+      console.log(req.body.files)
+      let fileData = req.body.files;
       const title = req.body.title,
       description = req.body.description,
       company = req.body.company,
       student = req.body.student,
-      files = req.body.files,
       tags = req.body.tags;
-      
+      files = [];
+      if(fileData){
+        fileData.map(function(data){
+          var json = {};
+          json.key = data.key;
+          json.path = data.path;
+          json.filePath = data.filePath;
+          files.push(json);
+          //console.log(files);
+        })
+      }
       if (title === '' ||  description === '' || company === '' || student === '' || files === '' || tags === ''){
         res.status(403).send('Mandatory field missing')
       }
@@ -47,6 +59,7 @@ exports.createAward = (req, res) => {
                   files: files,
                   tags: tags
                 })
+                console.log(award);
                 award.save( (err, saved) => {
                   if(err) {
                     console.log('err in saving the award', err)
@@ -158,6 +171,22 @@ exports.deleteAward = (req, res) => {
         }
         else {
           console.log('found the award', award)
+          if(award.files){
+            const s3 = new awsSDK.S3();
+            award.files.map((data) => {
+              var params = {
+                Bucket: 'student-burger'+data.path,
+                Key : data.key
+              };
+              console.log(params);
+              s3.deleteObject(params, function (err, data) {
+                if (err) {
+                  console.log(err, err.stack);
+                  res.status(412).send(err)
+                 } // error
+              });
+            })
+          }
           Award.findByIdAndRemove(awardId, (awardErr, removedAward) => {
             if (awardErr) {
               console.log('could not remove award', err)
