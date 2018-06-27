@@ -31,6 +31,7 @@ exports.createProject = (req, res) => {
           json.key = data.key;
           json.path = data.path;
           json.filePath = data.filePath;
+          json.type = data.type;
           files.push(json);
           //console.log(files);
         })
@@ -296,9 +297,9 @@ exports.deleteProject = (req, res) => {
           console.log('could not find project', project)
           res.status(404).send('could not find project')
         } else {
-          if(award.files){
+          if(project.files){
             const s3 = new awsSDK.S3();
-            award.files.map((data) => {
+            project.files.map((data) => {
               var params = {
                 Bucket: 'student-burger'+data.path,
                 Key : data.key

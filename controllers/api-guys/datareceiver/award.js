@@ -29,6 +29,7 @@ exports.createAward = (req, res) => {
           json.key = data.key;
           json.path = data.path;
           json.filePath = data.filePath;
+          json.type = data.type;
           files.push(json);
           //console.log(files);
         })

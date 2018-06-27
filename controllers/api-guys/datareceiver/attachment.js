@@ -35,7 +35,8 @@ const generateSignature = (method, file, key, path,expires = serverConfig.s3.def
     Key: key,
     Expires: expires,
     ACL: 'public-read-write',
-  }
+    "ContentType": file.type
+  };
   console.log(params);
   return new Promise((resolve, reject) => {
     s3.getSignedUrl(method, params, (error, signedUrl) => {

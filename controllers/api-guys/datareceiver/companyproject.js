@@ -6,6 +6,8 @@ const Student = require('../../../models/Student');
 const jwt = require('jsonwebtoken');
 const Tag = require('../../../models/Tag');
 const async = require('async');
+const awsSDK = require('aws-sdk');
+
 
 exports.createCompanyProject = (req, res) => {
   console.log('inside project creation project',req.body)
@@ -18,9 +20,20 @@ exports.createCompanyProject = (req, res) => {
             abstract = req.body.abstract,
             description = req.body.description,
             author = req.body.author,
-            files = req.body.files,
+            files = [],
             tags = req.body.tags;
-      
+            let fileData = req.body.files;
+            if (fileData) {
+              fileData.map(function (data) {
+                var json = {};
+                json.key = data.key;
+                json.path = data.path;
+                json.filePath = data.filePath;
+                json.type = data.type;
+                files.push(json);
+                //console.log(files);
+              })
+            }
       if (title === '' || abstract === '' || description === '' || author === '' || files === '' || tags === ''){
         res.status(406).send('Mandatory field missing')
       }
@@ -243,6 +256,22 @@ exports.deleteCompanyProject = (req, res) => {
           res.status(404).send('could not find project')
         }
         else {
+          if(project.files){
+            const s3 = new awsSDK.S3();
+            project.files.map((data) => {
+              var params = {
+                Bucket: 'student-burger'+data.path,
+                Key : data.key
+              };
+              console.log(params);
+              s3.deleteObject(params, function (err, data) {
+                if (err) {
+                  console.log(err, err.stack);
+                  res.status(412).send(err)
+                 } // error
+              });
+            })
+          }
           console.log('found the company projct', project)
           CompanyProject.findByIdAndRemove(project._id, (removeErr, projectRemoved) => {
             if(removeErr) {
