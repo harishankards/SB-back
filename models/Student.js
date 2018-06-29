@@ -26,6 +26,12 @@ const studentSchema = new Schema({
   steam: String,
   tokens: Array,
 
+  favorites: {
+    projects: [{ type: Schema.Types.ObjectId, ref: 'projects' }],
+    contests: [{ type: Schema.Types.ObjectId, ref: 'contests' }],
+    companyProjects: [{ type: Schema.Types.ObjectId, ref: 'companyProjects' }]
+  },
+
   profile: {
     name: String,
     fname: String,

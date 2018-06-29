@@ -15,9 +15,17 @@ const companySchema = new Schema({
   steam: String,
   tokens: Array,
 
+  favorites: {
+    projects: [{ type: Schema.Types.ObjectId, ref: 'projects' }],
+    contests: [{ type: Schema.Types.ObjectId, ref: 'contests' }]
+  },
+
   plan: {
     type: String,
-    projectViewed: Number
+    projectViewed: {
+      type: Number,
+      default: 0
+    }
   },
   profile: {
     fname: String,

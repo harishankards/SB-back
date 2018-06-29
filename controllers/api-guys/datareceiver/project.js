@@ -451,7 +451,15 @@ exports.addCompanyViews = (req, res) => {
                     res.status(404).send(err)
                   } else {
                     console.log('viewed company', viewedCompany)
-                    res.status(200).send('company_view_added')
+                    Company.findByIdAndUpdate(companyId, {$inc: {"plan.projectViewed": 1 }}, {new: true }, (viewUpdateErr, viewUpdated) => {
+                      if (viewUpdateErr) {
+                        console.log('viewupdate err', viewUpdateErr)
+                        res.status(302).send(viewUpdateErr)                      
+                      } else {
+                        console.log('view updated', viewUpdated)
+                        res.status(200).send('company_view_added')
+                      }
+                    })
                   }
                 })
               }
