@@ -46,6 +46,7 @@ passport.use('company-local', new LocalStrategy({ usernameField: 'email' }, (ema
 
 passport.use('student-local', new LocalStrategy({ usernameField: 'email' }, (email, password, done) => {
   Student.findOne({ email: email.toLowerCase() }, (err, student) => {
+    console.log(err,student);
     if (err) { return done(err); }
     if (!student) {
       return done(null, false, { msg: `Email ${email} not found.` });

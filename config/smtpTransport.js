@@ -1,18 +1,16 @@
 (function(){
 
     var mailer = require('nodemailer');
-    var configs = require('./config.json');
-
     var smtpTransport = mailer.createTransport({
         host : "smtp.gmail.com",
         port : 465,
         secure : true,
         auth : {
             type : "OAuth2",
-            user : "prabhu231197@gmail.com",
-            clientId : configs.mailer.client_id,
-            clientSecret : configs.mailer.client_secret,
-            refreshToken : configs.mailer.refresh_token
+            user : "spritle.testing@gmail.com",
+            clientId : '359461739004-6v07ao9crh3ltq84gakjng8lflm0kkps.apps.googleusercontent.com',
+            clientSecret : 'OuTh1hB67JXUoY1JXTYrXuRl',
+            refreshToken : '1/o9LobTZNLhPM_-719DIgVeN5zAzqxCvmVKiADL_qCvYFYY17YtKOEWF0KVDaVtzf'
         }
     });
 

@@ -296,14 +296,17 @@ app.post('/company/login', companyDataReceiverController.login);
 // Authenticate
 app.post('/authenticate', authenticatorController.authenticate);
 
-
+//Check Verification
+app.get('/getVerificationToken', authenticatorController.sendVerificationToken);
 // Signup
 app.post('/student/signup', studentDataReceiverController.postSignup);
 app.post('/company/signup', companyDataReceiverController.postSignup);
 
+// Verification
+app.get('/student/account/authenticate',studentDataReceiverController.verifyStudent);
 // Students
 
-app.get('/students/get', authenticatorController.verifyToken, studentDataProviderController.getStudent);
+app.get('/students/get', authenticatorController.verifyToken,studentDataProviderController.getStudent);
 app.delete('/students/delete', authenticatorController.verifyToken, studentDataReceiverController.deleteStudent);
 app.get('/students/all', authenticatorController.verifyToken,  studentDataProviderController.getAllStudents);
 app.put('/students/update', authenticatorController.verifyToken, studentDataReceiverController.updateStudent);

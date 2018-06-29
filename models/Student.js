@@ -10,7 +10,14 @@ const studentSchema = new Schema({
   passwordResetExpires: Date,
   username: String,
   tags: Array,
-
+  verified: {
+    type: Boolean,
+    default: false
+  },
+  verificationToken: {
+    type: String,
+    default: null
+  },
   facebook: String,
   twitter: String,
   google: String,
