@@ -22,7 +22,10 @@ const companySchema = new Schema({
 
   plan: {
     type: String,
-    projectViewed: Number
+    projectViewed: {
+      type: Number,
+      default: 0
+    }
   },
   profile: {
     fname: String,
