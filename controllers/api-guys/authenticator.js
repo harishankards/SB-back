@@ -29,6 +29,7 @@ exports.authenticate = (req, res) => {
 
 
 exports.verifyToken = (req, res, next) => {
+  console.log(req.headers)
   const bearerHeader = req.headers['authorization'];
   if (!bearerHeader) {
     res.sendStatus(403);
@@ -48,9 +49,20 @@ exports.verifyToken = (req, res, next) => {
           res.status(403).send('Invalid token');
         } else {
           console.log(data);
-          if (data.student.verified || data.company.verified) {
-            next()
-          } else {
+          if(data.student){
+            if(data.verified){
+              next()
+            } else {
+              res.status(403).send('Unverified user');
+            }
+          } else if(data.company){
+            if(data.company.verified){
+              next()
+            } else {
+              res.status(403).send('Unverified user');
+            }
+          }
+           else {
             res.status(403).send('Bad request');
           }
         }
