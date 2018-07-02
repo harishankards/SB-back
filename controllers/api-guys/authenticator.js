@@ -48,12 +48,13 @@ exports.verifyToken = (req, res, next) => {
           }
           res.status(403).send('Invalid token');
         } else {
-          if (!data.verified) {
-            console.log('data not verified')
-            res.status(403).send('Bad request');
-          } else {
-            next()
-          }
+          next()
+          // if (!data.verified) {
+          //   console.log('data not verified')
+          //   res.status(403).send('Bad request');
+          // } else {
+          //   next()
+          // }
         }
       })
     } catch (err) {
