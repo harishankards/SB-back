@@ -9,9 +9,8 @@ const passport = require('passport');
 const Student = require('../../models/Student');
 const Company = require('../../models/Company');
 const jwt = require('jsonwebtoken');
-const mailer = require('../mailer')
+const mailer = require('../mailer');
 const randomstring = require("randomstring");
-
 
 exports.authenticate = (req, res) => {
   console.log('inside the authenticate function', req.body);
@@ -47,10 +46,11 @@ exports.verifyToken = (req, res, next) => {
           }
           res.status(403).send('Invalid token');
         } else {
-          if (!data.verified) {
-            res.status(403).send('Bad request');
-          } else {
+          console.log(data);
+          if (data.student.verified || data.company.verified) {
             next()
+          } else {
+            res.status(403).send('Bad request');
           }
         }
       })
@@ -60,7 +60,6 @@ exports.verifyToken = (req, res, next) => {
     }
   }
 }
-
 
 exports.sendVerificationToken = (req, res) => {
   const bearerHeader = req.headers['authorization'];
@@ -80,43 +79,84 @@ exports.sendVerificationToken = (req, res) => {
           res.status(403).send('Invalid token');
         } else {
           let token = randomstring.generate();
-          var email = data.student.email
-          Student.findOne({
-            email: data.student.email
-          }, function (err, data) {
-            if (err) {
-              res.status(400).send('Email doesnot exist')
-            } else if (data) {
-              if (!data.verified) {
-                Student.updateOne({
-                  email: data.email
-                }, {
-                  $set: {
-                    verificationToken: token,
-                  }
-                }, function (err, data) {
+          if (data.student) {
+            console.log('Student')
+            let email = data.student.email
+            Student.findOne({
+              email: data.student.email
+            }, function (err, data) {
+              if (err) {
+                res.status(400).send('Email doesnot exist')
+              } else if (data) {
+                if (!data.verified) {
                   const link = 'http://localhost:3000/student/account/authenticate?email=' + email + '&token=' + token;
                   mailer.sendVerification(link, email, function (err, data) {
                     if (err) {
                       console.log(err)
                       res.status(400).send('Unable to send mail')
                     } else {
-                      res.status(200).send('Mail sent successfully')
+                      Student.updateOne({
+                        email: data.email
+                      }, {
+                        $set: {
+                          verificationToken: token,
+                        }
+                      }, function (err, data) {
+                        res.status(200).send('Mail sent successfully')
+                      })
                     }
                   })
-                })
+
+                } else {
+                  res.status(401).send('User already verified.Logout and sign in again');
+                }
               } else {
-                res.status(401).send('User already verified.Logout and sign in again');
+                res.status(400).send('Unable to send mail')
               }
-            } else {
-              res.status(400).send('Unable to send mail')
-            }
-          })
+            })
+          } else if (data.company) {
+            console.log('Company')
+            let email = data.company.email
+            Company.findOne({
+              email: data.company.email
+            }, function (err, data) {
+              if (err) {
+                res.status(400).send('Email doesnot exist')
+              } else if (data) {
+                if (!data.verified) {
+                  const link = 'http://localhost:3000/company/account/authenticate?email=' + email + '&token=' + token;
+                  mailer.sendVerification(link, email, function (err, data) {
+                    if (err) {
+                      console.log(err)
+                      res.status(400).send('Unable to send mail')
+                    } else {
+                      Company.updateOne({
+                        email: data.email
+                      }, {
+                        $set: {
+                          verificationToken: token,
+                        }
+                      }, function (err, data) {
+                        res.status(200).send('Mail sent successfully')
+                      })
+                    }
+                  })
+
+                } else {
+                  res.status(401).send('User already verified.Logout and sign in again');
+                }
+              } else {
+                res.status(400).send('Unable to send mail')
+              }
+            })
+          } else {
+            res.status(403).send('Invalid user');
+          }
         }
       })
     } catch (err) {
       console.log('catch ', err);
-      res.status(403).send('Token tampered');
+      res.status(403).send('Invalid user');
     }
   }
 }

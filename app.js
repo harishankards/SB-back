@@ -304,6 +304,7 @@ app.post('/company/signup', companyDataReceiverController.postSignup);
 
 // Verification
 app.get('/student/account/authenticate',studentDataReceiverController.verifyStudent);
+app.get('/company/account/authenticate',companyDataReceiverController.verifyCompany);
 // Students
 
 app.get('/students/get', authenticatorController.verifyToken,studentDataProviderController.getStudent);

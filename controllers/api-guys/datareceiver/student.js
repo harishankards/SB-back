@@ -11,8 +11,6 @@ const jwt = require('jsonwebtoken');
 const mailer = require('../../mailer')
 const randomstring = require("randomstring");
  
-let token = randomstring.generate();
-
 
 exports.postSignup = (req, res, next) => {
   console.log('received the signup request', req.body)
@@ -26,13 +24,13 @@ exports.postSignup = (req, res, next) => {
   if (errors) {
     return res.send(errors);
   }
-
+  let email = req.body.email;
+  let token = randomstring.generate();
   const student = new Student({
     email: req.body.email,
     password: req.body.password,
     verificationToken: token
   });
-  const link = 'http://localhost:3000/student/account/authenticate?email=' + req.body.email + '&token=' + token;
   console.log('student data', student)
   Student.findOne({
     email: req.body.email
@@ -50,6 +48,7 @@ exports.postSignup = (req, res, next) => {
         console.log('err in saving student', err)
         return next(err);
       } else {
+        const link = 'http://localhost:3000/student/account/authenticate?email=' + email + '&token=' + token;
         mailer.sendVerification(link, req.body.email, function (err, data) {
           if (err) {
             return next(err);
@@ -73,7 +72,7 @@ exports.postSignup = (req, res, next) => {
                 console.log('inside signing jwt')
                 res.json({
                   token: token,
-                  verified: student.verified,
+                  verified: student.verified || false,
                   message: 'signup_success'
                 })
               });
@@ -201,7 +200,7 @@ exports.login = (req, res, next) => {
             id: student._id,
             token: token,
             message: 'login_success',
-            verified: student.verified
+            verified: student.verified || false
           })
         });
       });
@@ -235,3 +234,4 @@ exports.updateStudent = (req, res) => {
     }
   })
 }
+

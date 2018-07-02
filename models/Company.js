@@ -14,6 +14,14 @@ const companySchema = new Schema({
   linkedin: String,
   steam: String,
   tokens: Array,
+  verified: {
+    type: Boolean,
+    default: false
+  },
+  verificationToken: {
+    type: String,
+    default: null
+  },
 
   favorites: {
     projects: [{ type: Schema.Types.ObjectId, ref: 'projects' }],

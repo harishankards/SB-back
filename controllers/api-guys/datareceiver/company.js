@@ -5,11 +5,13 @@ const jwt = require('jsonwebtoken');
 const Student = require('../../../models/Student');
 const { promisify } = require('util');
 const crypto = require('crypto');
-const nodemailer = require('nodemailer');
 const passport = require('passport');
-const randomBytesAsync = promisify(crypto.randomBytes);
+const mailer = require('../../mailer')
+const randomstring = require("randomstring");
+ 
 
 exports.postSignup = (req, res, next) => {
+    let token = randomstring.generate();
     console.log('received the signup request', req.body)
 
     req.sanitize('email').normalizeEmail({ gmail_remove_dots: false });
@@ -19,10 +21,11 @@ exports.postSignup = (req, res, next) => {
     if (errors) {
       return res.send(errors);
     }
-  
+    let email = req.body.email;
     const company = new Company({
       email: req.body.email,
-      password: req.body.password
+      password: req.body.password,
+      verificationToken: token
     });
   
     Company.findOne({ email: req.body.email }, (err, existingUser) => {
@@ -35,27 +38,42 @@ exports.postSignup = (req, res, next) => {
         if (err) { 
             console.log('err in saving company', err)
             return next(err); 
-        }
-        req.logIn(company, (err) => {
-          if (err) {
-            console.log('errin login', err)
-            return next(err);
-          }         
-          console.log('saved',saved)           
-          jwt.sign({company}, 'secret', (err, token) => {
+        } else {
+          const link = 'http://localhost:3000/company/account/authenticate?email=' + email + '&token=' + token;
+          mailer.sendVerification(link, req.body.email, function (err, data) {
             if (err) {
-              console.log('err in creating token')
-              res.json({
-                message: 'err in creating token'
+              console.log(err , 'Error here');
+              Company.findOneAndRemove({email: email}, function(err,data){
+                return next(err);
               })
+            } else {
+              req.logIn(company, (err) => {
+                if (err) {
+                  console.log('errin login', err)
+                  return next(err);
+                }
+                console.log('company', company)
+                console.log('saved2', saved)
+                jwt.sign({
+                  company
+                }, 'secret', (err, token) => {
+                  if (err) {
+                    console.log('err in creating token')
+                    res.json({
+                      message: 'err in creating token'
+                    })
+                  }
+                  console.log('inside signing jwt')
+                  res.json({
+                    token: token,
+                    verified: company.verified || false,
+                    message: 'signup_success'
+                  })
+                });
+              });
             }
-            console.log('inside signing jwt')
-            res.json({
-              token: token,
-              message: 'signup_success'
-            })
-          });
-        });
+          })
+        }
       });
     });
   };
@@ -103,9 +121,9 @@ exports.postSignup = (req, res, next) => {
     passport.authenticate('company-local', (err, company, info) => {
       if (err) { return next(err); }
       if (!company) {
-        console.log('errors', info)
-        res.status(403).send(info)
-      }
+        console.log('errors', info);
+        res.status(403).send(info);
+      } else {
       req.logIn(company, (err) => {
         if (err) { return next(err); }
         jwt.sign({company}, 'secret', (err, token) => {
@@ -120,10 +138,12 @@ exports.postSignup = (req, res, next) => {
           res.json({
             token: token,
             message: 'login_success',
-            id: company._id
+            id: company._id,
+            verified: company.verified || false
           })
         });
       });
+    }
     })(req, res, next); 
   }
 
@@ -151,4 +171,53 @@ exports.postSignup = (req, res, next) => {
         }) 
       }
       })
+  }
+
+
+  exports.verifyCompany = (req, res) => {
+    try {
+      console.log('req body', req.query)
+      if (req.query.token && req.query.email) {
+        Company.findOne({
+          email: req.query.email
+        }, function (err, data) {
+          console.log('company data', data);
+          if (err) {
+            res.status(401).send('Email not found');
+          } else {
+            if (data) {
+              if (data.verified) {
+                res.status(400).send('User already activated');
+              } else {
+                if (req.query.token === data.verificationToken) {
+                  Company.update({
+                    email: req.query.email
+                  }, {
+                    $set: {
+                      verificationToken: null,
+                      verified: true
+                    }
+                  }, function (err, data) {
+                    if (err) {
+                      res.status(403).send('Unable to verify');
+                    } else {
+                      res.status(200).send('User verified successfully');
+                    }
+                  });
+                }
+                else{
+                  res.status(403).send('Unable to verify');
+                }
+              }
+            } else {
+              res.status(401).send('Email not found');
+            }
+          }
+        });
+      } else {
+        res.status(403).send('Invalid link');
+      }
+    } catch (err) {
+      res.status(400).status('Bad request');
+    }
   }
