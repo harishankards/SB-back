@@ -51,7 +51,9 @@ exports.postSignup = (req, res, next) => {
         const link = 'http://localhost:3000/student/account/authenticate?email=' + email + '&token=' + token;
         mailer.sendVerification(link, req.body.email, function (err, data) {
           if (err) {
-            return next(err);
+            Student.findOneAndRemove({email: email}, function(err,data){
+              return next(err);
+            })
           } else {
             req.logIn(student, (err) => {
               if (err) {
