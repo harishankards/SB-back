@@ -50,7 +50,7 @@ exports.verifyToken = (req, res, next) => {
         } else {
           console.log(data);
           if(data.student){
-            if(data.verified){
+            if(data.student.verified){
               next()
             } else {
               res.status(403).send('Unverified user');
