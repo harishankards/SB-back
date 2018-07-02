@@ -40,6 +40,7 @@ exports.verifyToken = (req, res, next) => {
     req.token = bearerToken;
     try {
       jwt.verify(req.token, 'secret', function (err, data) {
+        console.log('data of student', data)
         if (err) {
           console.log('callback', err);
           if (err.name === 'TokenExpiredError') {
@@ -48,6 +49,7 @@ exports.verifyToken = (req, res, next) => {
           res.status(403).send('Invalid token');
         } else {
           if (!data.verified) {
+            console.log('data not verified')
             res.status(403).send('Bad request');
           } else {
             next()
