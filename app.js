@@ -312,86 +312,86 @@ app.get('/auth/pinterest/callback', passport.authorize('pinterest', { failureRed
 
 // Login
 apiRouter.post('/student/login', studentDataReceiverController.login);
-app.post('/company/login', companyDataReceiverController.login);
+apiRouter.post('/company/login', companyDataReceiverController.login);
 
 // Authenticate
-app.post('/authenticate', authenticatorController.authenticate);
+apiRouter.post('/authenticate', authenticatorController.authenticate);
 
 //Check Verification
-app.get('/getVerificationToken', authenticatorController.sendVerificationToken);
+apiRouter.get('/getVerificationToken', authenticatorController.sendVerificationToken);
 // Signup
-app.post('/student/signup', studentDataReceiverController.postSignup);
-app.post('/company/signup', companyDataReceiverController.postSignup);
+apiRouter.post('/student/signup', studentDataReceiverController.postSignup);
+apiRouter.post('/company/signup', companyDataReceiverController.postSignup);
 
 // Verification
-app.get('/student/account/authenticate',studentDataReceiverController.verifyStudent);
-app.get('/company/account/authenticate',companyDataReceiverController.verifyCompany);
+apiRouter.get('/student/account/authenticate',studentDataReceiverController.verifyStudent);
+apiRouter.get('/company/account/authenticate',companyDataReceiverController.verifyCompany);
 // Students
 
-app.get('/students/get', authenticatorController.verifyToken,studentDataProviderController.getStudent);
-app.delete('/students/delete', authenticatorController.verifyToken, studentDataReceiverController.deleteStudent);
-app.get('/students/all', authenticatorController.verifyToken,  studentDataProviderController.getAllStudents);
-app.put('/students/update', authenticatorController.verifyToken, studentDataReceiverController.updateStudent);
+apiRouter.get('/students/get', authenticatorController.verifyToken,studentDataProviderController.getStudent);
+apiRouter.delete('/students/delete', authenticatorController.verifyToken, studentDataReceiverController.deleteStudent);
+apiRouter.get('/students/all', authenticatorController.verifyToken,  studentDataProviderController.getAllStudents);
+apiRouter.put('/students/update', authenticatorController.verifyToken, studentDataReceiverController.updateStudent);
 
 // Companies
 
-app.get('/companies/get', authenticatorController.verifyToken, companyDataProviderController.getCompany);
-app.delete('/companies/delete', authenticatorController.verifyToken, companyDataReceiverController.deleteCompany);
-app.put('/companies/update', authenticatorController.verifyToken, companyDataReceiverController.updateCompany);
+apiRouter.get('/companies/get', authenticatorController.verifyToken, companyDataProviderController.getCompany);
+apiRouter.delete('/companies/delete', authenticatorController.verifyToken, companyDataReceiverController.deleteCompany);
+apiRouter.put('/companies/update', authenticatorController.verifyToken, companyDataReceiverController.updateCompany);
 
 
 // Projects
-app.get('/projects/all', authenticatorController.verifyToken, projectDataProviderController.getAllProjects);
-app.post('/projects/new', authenticatorController.verifyToken, projectDataReceiverController.createProject);
-app.get('/projects/get', authenticatorController.verifyToken, projectDataProviderController.getProject);
-app.post('/projects/upvotes', authenticatorController.verifyToken, projectDataReceiverController.addUpvotes);
-app.post('/projects/upvotes/remove', authenticatorController.verifyToken, projectDataReceiverController.removeUpvotes);
-app.put('/projects/update', authenticatorController.verifyToken, projectDataReceiverController.updateProject)
-app.delete('/projects/delete', authenticatorController.verifyToken, projectDataReceiverController.deleteProject);
+apiRouter.get('/projects/all', authenticatorController.verifyToken, projectDataProviderController.getAllProjects);
+apiRouter.post('/projects/new', authenticatorController.verifyToken, projectDataReceiverController.createProject);
+apiRouter.get('/projects/get', authenticatorController.verifyToken, projectDataProviderController.getProject);
+apiRouter.post('/projects/upvotes', authenticatorController.verifyToken, projectDataReceiverController.addUpvotes);
+apiRouter.post('/projects/upvotes/remove', authenticatorController.verifyToken, projectDataReceiverController.removeUpvotes);
+apiRouter.put('/projects/update', authenticatorController.verifyToken, projectDataReceiverController.updateProject)
+apiRouter.delete('/projects/delete', authenticatorController.verifyToken, projectDataReceiverController.deleteProject);
 
-app.post('/projects/addStudentView', authenticatorController.verifyToken, projectDataReceiverController.addStudentViews);
-app.post('/projects/addCompanyView', authenticatorController.verifyToken, projectDataReceiverController.addCompanyViews);
+apiRouter.post('/projects/addStudentView', authenticatorController.verifyToken, projectDataReceiverController.addStudentViews);
+apiRouter.post('/projects/addCompanyView', authenticatorController.verifyToken, projectDataReceiverController.addCompanyViews);
 
 // Company projects
-app.get('/companyprojects/all', authenticatorController.verifyToken, companyProjectDataProviderController.getAllProjects);
-app.get('/companyprojects', authenticatorController.verifyToken, companyProjectDataProviderController.getProject);
-app.post('/companyprojects', authenticatorController.verifyToken, companyProjectDataReceiverController.createCompanyProject);
-app.put('/companyprojects', authenticatorController.verifyToken, companyProjectDataReceiverController.updateCompanyProject);
-app.delete('/companyprojects', authenticatorController.verifyToken, companyProjectDataReceiverController.deleteCompanyProject);
-app.post('/companyprojects/upvotes', authenticatorController.verifyToken, companyProjectDataReceiverController.addUpvotes);
-app.post('/companyprojects/upvotes/remove', authenticatorController.verifyToken, companyProjectDataReceiverController.removeUpvotes);
+apiRouter.get('/companyprojects/all', authenticatorController.verifyToken, companyProjectDataProviderController.getAllProjects);
+apiRouter.get('/companyprojects', authenticatorController.verifyToken, companyProjectDataProviderController.getProject);
+apiRouter.post('/companyprojects', authenticatorController.verifyToken, companyProjectDataReceiverController.createCompanyProject);
+apiRouter.put('/companyprojects', authenticatorController.verifyToken, companyProjectDataReceiverController.updateCompanyProject);
+apiRouter.delete('/companyprojects', authenticatorController.verifyToken, companyProjectDataReceiverController.deleteCompanyProject);
+apiRouter.post('/companyprojects/upvotes', authenticatorController.verifyToken, companyProjectDataReceiverController.addUpvotes);
+apiRouter.post('/companyprojects/upvotes/remove', authenticatorController.verifyToken, companyProjectDataReceiverController.removeUpvotes);
 
 
 // Contests
-app.get('/contests/all', authenticatorController.verifyToken, contestDataProviderController.getAllContests);
-app.post('/contests/new', authenticatorController.verifyToken, contestDataReceiverController.createContest);
-app.get('/contests/get', authenticatorController.verifyToken, contestDataProviderController.getContest);
-app.put('/contests/update', authenticatorController.verifyToken, contestDataReceiverController.updateContest);
-app.post('/contests/registrations', authenticatorController.verifyToken, contestDataReceiverController.addRegistrations);
-app.post('/contests/registrations/remove', authenticatorController.verifyToken, contestDataReceiverController.removeRegistrations);
-app.delete('/contests/delete', authenticatorController.verifyToken, contestDataReceiverController.deleteContest);
+apiRouter.get('/contests/all', authenticatorController.verifyToken, contestDataProviderController.getAllContests);
+apiRouter.post('/contests/new', authenticatorController.verifyToken, contestDataReceiverController.createContest);
+apiRouter.get('/contests/get', authenticatorController.verifyToken, contestDataProviderController.getContest);
+apiRouter.put('/contests/update', authenticatorController.verifyToken, contestDataReceiverController.updateContest);
+apiRouter.post('/contests/registrations', authenticatorController.verifyToken, contestDataReceiverController.addRegistrations);
+apiRouter.post('/contests/registrations/remove', authenticatorController.verifyToken, contestDataReceiverController.removeRegistrations);
+apiRouter.delete('/contests/delete', authenticatorController.verifyToken, contestDataReceiverController.deleteContest);
 
 
 //Awards
-app.get('/awards/all', authenticatorController.verifyToken, awardDataProviderController.getAllAwards);
-app.get('/awards/get', authenticatorController.verifyToken, awardDataProviderController.getAward);
-app.post('/awards/new', authenticatorController.verifyToken, awardDataReceiverController.createAward);
-app.put('/awards/update', authenticatorController.verifyToken, awardDataReceiverController.updateAward);
-app.delete('/awards/delete', authenticatorController.verifyToken, awardDataReceiverController.deleteAward);
+apiRouter.get('/awards/all', authenticatorController.verifyToken, awardDataProviderController.getAllAwards);
+apiRouter.get('/awards/get', authenticatorController.verifyToken, awardDataProviderController.getAward);
+apiRouter.post('/awards/new', authenticatorController.verifyToken, awardDataReceiverController.createAward);
+apiRouter.put('/awards/update', authenticatorController.verifyToken, awardDataReceiverController.updateAward);
+apiRouter.delete('/awards/delete', authenticatorController.verifyToken, awardDataReceiverController.deleteAward);
 
 // Attachments
-app.get('/attachments', authenticatorController.verifyToken, attachmentProviderController.getAttachments);
-app.post('/attachments', authenticatorController.verifyToken, upload.single('file'), attachmentReceiverController.createAttachment);
-app.delete('/attachments', authenticatorController.verifyToken, attachmentReceiverController.deleteAttachment);
-app.post('/attachments/signedUrlGet', authenticatorController.verifyToken, attachmentReceiverController.signedUrlGet);
-app.post('/attachments/signedUrlPut', attachmentReceiverController.signedUrlPut);
+apiRouter.get('/attachments', authenticatorController.verifyToken, attachmentProviderController.getAttachments);
+apiRouter.post('/attachments', authenticatorController.verifyToken, upload.single('file'), attachmentReceiverController.createAttachment);
+apiRouter.delete('/attachments', authenticatorController.verifyToken, attachmentReceiverController.deleteAttachment);
+apiRouter.post('/attachments/signedUrlGet', authenticatorController.verifyToken, attachmentReceiverController.signedUrlGet);
+apiRouter.post('/attachments/signedUrlPut', attachmentReceiverController.signedUrlPut);
 
 // Tags
-app.get('/getalltags', authenticatorController.verifyToken, tagDataProviderController.getAllTags);
-app.get('/tags', authenticatorController.verifyToken, tagDataProviderController.getTag);
-app.post('/tags', authenticatorController.verifyToken, tagDataReceiverController.createTag);
-app.put('/tags', authenticatorController.verifyToken, tagDataReceiverController.updateTag);
-app.delete('/tags', authenticatorController.verifyToken, tagDataReceiverController.deleteTag);
+apiRouter.get('/getalltags', authenticatorController.verifyToken, tagDataProviderController.getAllTags);
+apiRouter.get('/tags', authenticatorController.verifyToken, tagDataProviderController.getTag);
+apiRouter.post('/tags', authenticatorController.verifyToken, tagDataReceiverController.createTag);
+apiRouter.put('/tags', authenticatorController.verifyToken, tagDataReceiverController.updateTag);
+apiRouter.delete('/tags', authenticatorController.verifyToken, tagDataReceiverController.deleteTag);
 
 /**
  * Error Handler.
