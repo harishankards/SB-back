@@ -166,7 +166,7 @@ exports.deleteStudent = (req, res) => {
 }
 
 exports.login = (req, res, next) => {
-  console.log('inside the login function', req.body);
+  console.log('inside the login function', req);
   const errors = req.validationErrors();
 
   if (errors) {

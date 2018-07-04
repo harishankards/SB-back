@@ -29,6 +29,7 @@ const history = require('connect-history-api-fallback');
  */
 const app = express();
 
+
 const storage = multer.diskStorage({
   destination: function (req, file, callback) {
     callback(null, './uploads/');
@@ -170,6 +171,16 @@ app.use((req, res, next) => {
   next();
 });
 
+const appRouter = express.Router();
+const apiRouter = express.Router();
+
+appRouter.get('/', (req, res, next) => {
+  res.sendFile(path.resolve("./public/index.html"));
+})
+
+app.use('/', appRouter);
+app.use('/api/v1', apiRouter);
+
 app.use((req, res, next) => {
   // After successful login, redirect back to the intended page
   if (!req.user &&
@@ -300,7 +311,7 @@ app.get('/auth/pinterest/callback', passport.authorize('pinterest', { failureRed
 */
 
 // Login
-app.post('/student/login', studentDataReceiverController.login);
+apiRouter.post('/student/login', studentDataReceiverController.login);
 app.post('/company/login', companyDataReceiverController.login);
 
 // Authenticate
