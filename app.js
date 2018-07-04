@@ -164,12 +164,12 @@ app.use((req, res, next) => {
 const appRouter = express.Router();
 const apiRouter = express.Router();
 
-const staticFileMiddleware = express.static(path.join(__dirname + '/public'))
-appRouter.use(staticFileMiddleware);
-appRouter.use(history({
-  disableDotRule: true,
-  verbose: true
-}));
+// const staticFileMiddleware = express.static(path.join(__dirname + '/public'))
+// appRouter.use(staticFileMiddleware);
+// appRouter.use(history({
+//   disableDotRule: true,
+//   verbose: true
+// }));
 
 // app.get('/', function (req, res) {
 //   res.render(path.join(__dirname + '/public/index.html'));
