@@ -92,9 +92,9 @@ const companyProjectDataReceiverController = require('./controllers/api-guys/dat
 const tagDataReceiverController = require('./controllers/api-guys/datareceiver/tag');
 
 
-/**
- * API keys and Passport configuration.
- */
+// /**
+//  * API keys and Passport configuration.
+//  */
 const passportConfig = require('./config/passport');
 
 
@@ -111,7 +111,7 @@ mongoose.connection.on('error', (err) => {
 
 /**
  * Express configuration.
- */
+//  */
 app.set('host', process.env.OPENSHIFT_NODEJS_IP || '0.0.0.0');
 app.set('port', process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 3000);
 app.set('views', path.join(__dirname, 'views'));
@@ -123,16 +123,6 @@ app.use(sass({
   dest: path.join(__dirname, 'public')
 }));
 
-const staticFileMiddleware = express.static(path.join(__dirname + '/public'))
-app.use(staticFileMiddleware);
-app.use(history({
-  disableDotRule: true,
-  verbose: true
-}));
-
-// app.get('/', function (req, res) {
-//   res.render(path.join(__dirname + '/public/index.html'));
-// });
 
 app.use(logger('dev'));
 app.use(bodyParser.json());
@@ -173,6 +163,17 @@ app.use((req, res, next) => {
 
 const appRouter = express.Router();
 const apiRouter = express.Router();
+
+const staticFileMiddleware = express.static(path.join(__dirname + '/public'))
+appRouter.use(staticFileMiddleware);
+appRouter.use(history({
+  disableDotRule: true,
+  verbose: true
+}));
+
+// app.get('/', function (req, res) {
+//   res.render(path.join(__dirname + '/public/index.html'));
+// });
 
 appRouter.get('/', (req, res, next) => {
   res.sendFile(path.resolve("./public/index.html"));
@@ -220,9 +221,9 @@ app.post('/account/password', passportConfig.isAuthenticated, userController.pos
 app.post('/account/delete', passportConfig.isAuthenticated, userController.postDeleteAccount);
 app.get('/account/unlink/:provider', passportConfig.isAuthenticated, userController.getOauthUnlink);
 
-/**
- * API examples routes.
- */
+// /**
+//  * API examples routes.
+//  */
 app.get('/api', apiController.getApi);
 app.get('/api/steam', passportConfig.isAuthenticated, passportConfig.isAuthorized, apiController.getSteam);
 app.get('/api/stripe', apiController.getStripe);
@@ -248,19 +249,19 @@ app.get('/api/pinterest', passportConfig.isAuthenticated, passportConfig.isAutho
 app.post('/api/pinterest', passportConfig.isAuthenticated, passportConfig.isAuthorized, apiController.postPinterest);
 app.get('/api/google-maps', apiController.getGoogleMaps);
 
-/**
- * OAuth authentication routes. (Sign in)
- */
+// /**
+//  * OAuth authentication routes. (Sign in)
+//  */
 app.get('/auth/instagram', passport.authenticate('instagram'));
 app.get('/auth/instagram/callback', passport.authenticate('instagram', { failureRedirect: '/login' }), (req, res) => {
   res.redirect(req.session.returnTo || '/');
 });
-app.get('/auth/facebook/student', passport.authenticate('facebook-student', { scope: ['email', 'public_profile'] }));
-app.get('/auth/facebook/student/callback', passport.authenticate('facebook-student', { failureRedirect: '/login' }), (req, res) => {
+apiRouter.get('/auth/facebook/student', passport.authenticate('facebook-student', { scope: ['email', 'public_profile'] }));
+apiRouter.get('/auth/facebook/student/callback', passport.authenticate('facebook-student', { failureRedirect: '/login' }), (req, res) => {
   res.redirect(req.session.returnTo || '/');
 });
-app.get('/auth/facebook/company', passport.authenticate('facebook-company', { scope: ['email', 'public_profile'] }));
-app.get('/auth/facebook/company/callback', passport.authenticate('facebook-company', { failureRedirect: '/login' }), (req, res) => {
+apiRouter.get('/auth/facebook/company', passport.authenticate('facebook-company', { scope: ['email', 'public_profile'] }));
+apiRouter.get('/auth/facebook/company/callback', passport.authenticate('facebook-company', { failureRedirect: '/login' }), (req, res) => {
   res.redirect(req.session.returnTo || '/');
 });
 app.get('/auth/github', passport.authenticate('github'));
@@ -275,19 +276,19 @@ app.get('/auth/twitter', passport.authenticate('twitter'));
 app.get('/auth/twitter/callback', passport.authenticate('twitter', { failureRedirect: '/login' }), (req, res) => {
   res.redirect(req.session.returnTo || '/');
 });
-app.get('/auth/linkedin/student', passport.authenticate('student-linkedin', { state: 'SOME STATE' }));
-app.get('/auth/linkedin/student/callback', passport.authenticate('student-linkedin', { failureRedirect: '/auth/student/login' }), (req, res) => {
+apiRouter.get('/auth/linkedin/student', passport.authenticate('student-linkedin', { state: 'SOME STATE' }));
+apiRouter.get('/auth/linkedin/student/callback', passport.authenticate('student-linkedin', { failureRedirect: '/auth/student/login' }), (req, res) => {
   res.redirect(req.session.returnTo || '/');
 });
 
-app.get('/auth/linkedin/company', passport.authenticate('company-linkedin', { state: 'SOME STATE' }));
-app.get('/auth/linkedin/company/callback', passport.authenticate('company-linkedin', { failureRedirect: '/auth/student/login' }), (req, res) => {
+apiRouter.get('/auth/linkedin/company', passport.authenticate('company-linkedin', { state: 'SOME STATE' }));
+apiRouter.get('/auth/linkedin/company/callback', passport.authenticate('company-linkedin', { failureRedirect: '/auth/student/login' }), (req, res) => {
   res.redirect(req.session.returnTo || '/');
 });
 
-/**
- * OAuth authorization routes. (API examples)
- */
+// /**
+//  * OAuth authorization routes. (API examples)
+//  */
 app.get('/auth/foursquare', passport.authorize('foursquare'));
 app.get('/auth/foursquare/callback', passport.authorize('foursquare', { failureRedirect: '/api' }), (req, res) => {
   res.redirect('/api/foursquare');
@@ -381,7 +382,7 @@ apiRouter.delete('/awards/delete', authenticatorController.verifyToken, awardDat
 
 // Attachments
 apiRouter.get('/attachments', authenticatorController.verifyToken, attachmentProviderController.getAttachments);
-apiRouter.post('/attachments', authenticatorController.verifyToken, upload.single('file'), attachmentReceiverController.createAttachment);
+// apiRouter.post('/attachments', authenticatorController.verifyToken, upload.single('file'), attachmentReceiverController.createAttachment);
 apiRouter.delete('/attachments', authenticatorController.verifyToken, attachmentReceiverController.deleteAttachment);
 apiRouter.post('/attachments/signedUrlGet', authenticatorController.verifyToken, attachmentReceiverController.signedUrlGet);
 apiRouter.post('/attachments/signedUrlPut', attachmentReceiverController.signedUrlPut);
