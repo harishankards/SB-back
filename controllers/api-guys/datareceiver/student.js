@@ -200,6 +200,7 @@ exports.login = (req, res, next) => {
           console.log('user logged in', student)
           res.json({
             id: student._id,
+            student: student,
             token: token,
             message: 'login_success',
             verified: student.verified || false
