@@ -92,9 +92,9 @@ const companyProjectDataReceiverController = require('./controllers/api-guys/dat
 const tagDataReceiverController = require('./controllers/api-guys/datareceiver/tag');
 
 
-// /**
-//  * API keys and Passport configuration.
-//  */
+/**
+ * API keys and Passport configuration.
+ */
 const passportConfig = require('./config/passport');
 
 
@@ -111,7 +111,7 @@ mongoose.connection.on('error', (err) => {
 
 /**
  * Express configuration.
-//  */
+ */
 app.set('host', process.env.OPENSHIFT_NODEJS_IP || '0.0.0.0');
 app.set('port', process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 3000);
 app.set('views', path.join(__dirname, 'views'));
@@ -164,16 +164,16 @@ app.use((req, res, next) => {
 const appRouter = express.Router();
 const apiRouter = express.Router();
 
-// const staticFileMiddleware = express.static(path.join(__dirname + '/public'))
-// appRouter.use(staticFileMiddleware);
-// appRouter.use(history({
-//   disableDotRule: true,
-//   verbose: true
-// }));
+const staticFileMiddleware = express.static(path.join(__dirname + '/public'))
+app.use(staticFileMiddleware);
+appRouter.use('/', history({
+  disableDotRule: true,
+  verbose: true
+}));
 
-// app.get('/', function (req, res) {
-//   res.render(path.join(__dirname + '/public/index.html'));
-// });
+app.get('/', function (req, res) {
+  res.render(path.join(__dirname + '/public/index.html'));
+});
 
 appRouter.get('/', (req, res, next) => {
   res.sendFile(path.resolve("./public/index.html"));
@@ -394,9 +394,9 @@ apiRouter.post('/tags', authenticatorController.verifyToken, tagDataReceiverCont
 apiRouter.put('/tags', authenticatorController.verifyToken, tagDataReceiverController.updateTag);
 apiRouter.delete('/tags', authenticatorController.verifyToken, tagDataReceiverController.deleteTag);
 
-/**
- * Error Handler.
- */
+// /**
+//  * Error Handler.
+//  */
 app.use(errorHandler());
 
 /**
