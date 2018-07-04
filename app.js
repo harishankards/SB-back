@@ -21,15 +21,13 @@ const sass = require('node-sass-middleware');
 const multer = require('multer');
 const cors = require('cors');
 const jwt = require('jsonwebtoken');
-const socket = require('socket.io')
-// const http = require('http');
+const socket = require('socket.io');
+const history = require('connect-history-api-fallback');
 
 /**
  * Create Express server.
  */
 const app = express();
-
-
 
 const storage = multer.diskStorage({
   destination: function (req, file, callback) {
@@ -123,6 +121,18 @@ app.use(sass({
   src: path.join(__dirname, 'public'),
   dest: path.join(__dirname, 'public')
 }));
+
+const staticFileMiddleware = express.static(path.join(__dirname + '/public'))
+app.use(staticFileMiddleware);
+app.use(history({
+  disableDotRule: true,
+  verbose: true
+}));
+
+// app.get('/', function (req, res) {
+//   res.render(path.join(__dirname + '/public/index.html'));
+// });
+
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
