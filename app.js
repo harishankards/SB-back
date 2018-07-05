@@ -179,7 +179,7 @@ appRouter.get('/', (req, res, next) => {
   res.sendFile(path.resolve("./public/index.html"));
 })
 
-app.use('/', appRouter);
+// app.use('/', appRouter);
 app.use('/api/v1', apiRouter);
 
 app.use((req, res, next) => {
