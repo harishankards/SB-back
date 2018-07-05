@@ -1,2 +1,0 @@
-webpackJsonp([13],{JrLu:function(t,a,n){"use strict";var e=n("UlOv"),i=(n.n(e),e.mixins.reactiveProp),r=e.mixins.reactiveData;a.a={extends:e.Doughnut,mixins:[i,r],props:["chartData","options"],watch:{chartData:{deep:!0,handler:function(){this.renderChart(this.chartData,this.options)}}},mounted:function(){this.renderChart(this.chartData,this.options)}}},mOTB:function(t,a,n){"use strict";Object.defineProperty(a,"__esModule",{value:!0});var e=n("JrLu"),i=n("VU/8"),r=i(e.a,null,!1,null,null,null);a.default=r.exports}});
-//# sourceMappingURL=13.24472c054636b15d5efa.js.map
