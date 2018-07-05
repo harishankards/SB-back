@@ -29,6 +29,15 @@ const history = require('connect-history-api-fallback');
  */
 const app = express();
 
+/**
+ * CORS
+ */
+
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  next();
+});
 
 const storage = multer.diskStorage({
   destination: function (req, file, callback) {
@@ -155,29 +164,37 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-  next();
-});
-
+// For the main app
 const appRouter = express.Router();
-const apiRouter = express.Router();
-
-const staticFileMiddleware = express.static(path.join(__dirname + '/public'))
-app.use(staticFileMiddleware);
-appRouter.use('/', history({
-  disableDotRule: true,
-  verbose: true
-}));
-
-app.get('/', function (req, res) {
-  res.render(path.join(__dirname + '/public/index.html'));
-});
-
+appRouter.use('/public', express.static(path.join(__dirname, './public')))
 appRouter.get('/', (req, res, next) => {
-  res.sendFile(path.resolve("./public/index.html"));
+  res.sendFile(path.join(__dirname + '/public/index.html'));
 })
+// history
+app.use(history({ verbose: true, index: '/' }));
+
+app.use('/', appRouter)
+
+// For the API
+const apiRouter = express.Router();
+apiRouter.use((req, res, next) => {
+  console.log('api middlware fired')
+  next()
+})
+// const staticFileMiddleware = express.static(path.join(__dirname + '/public'))
+// app.use(staticFileMiddleware);
+// appRouter.use('/', history({
+//   disableDotRule: true,
+//   verbose: true
+// }));
+
+// app.get('/', function (req, res) {
+//   res.render(path.join(__dirname + '/public/index.html'));
+// });
+
+// appRouter.get('/', (req, res, next) => {
+//   res.sendFile(path.resolve("./public/index.html"));
+// })
 
 // app.use('/', appRouter);
 app.use('/api/v1', apiRouter);
